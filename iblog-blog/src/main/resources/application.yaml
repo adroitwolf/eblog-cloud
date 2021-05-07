@@ -1,0 +1,34 @@
+server:
+  port: 5010
+spring:
+  devtools:
+    restart:
+      enabled: true
+  application:
+    name: iblog-portal-blog
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 81.70.169.127:8848
+    sentinel:
+      transport:
+        dashboard: 81.70.169.127:8858
+  datasource:
+    url: jdbc:mysql://localhost:3306/eblog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+# Feign对Sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+
+# 图片上传下载
+web:
+  upload-path: ${user.dir}/img
+
+# 文件服务器
+fileServer: http://localhost:8099

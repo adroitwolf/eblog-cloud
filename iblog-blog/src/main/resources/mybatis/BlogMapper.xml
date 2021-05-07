@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.BlogDao">
+    <resultMap id="BaseResultMap" type="com.common.entity.pojo.Blog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="blogger_id" jdbcType="BIGINT" property="bloggerId"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="picture_id" jdbcType="BIGINT" property="pictureId"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate"/>
+        <result column="nearest_modify_date" jdbcType="TIMESTAMP" property="nearestModifyDate"/>
+        <result column="tag_title" jdbcType="VARCHAR" property="tagTitle"/>
+    </resultMap>
+    <select id="selectByUserExample" parameterType="com.blog.entity.vo.QueryParams" resultMap="BaseResultMap">
+        select
+        a.id, a.blogger_id, a.status, a.title,a.picture_id , a.summary,a.release_date, a.nearest_modify_date,
+        a.tag_title
+        from e_blog as a,e_blog_content as b
+        <where>
+            <if test="query.keyword != '' and query.keyword != null">
+                <bind name="pattern" value="'%' + query.keyword + '%'"></bind>
+                and concat(a.title,a.summary,a.tag_title,b.content_md) like #{pattern}
+            </if>
+            <if test="query.status != '' and query.status != null">
+                and a.status = #{query.status}
+            </if>
+            <if test="blogger_id != '' and blogger_id != null">
+                and a.blogger_id = #{blogger_id,jdbcType=BIGINT}
+            </if>
+            and a.id = b.id
+        </where>
+        order by a.release_date desc
+    </select>
+</mapper>

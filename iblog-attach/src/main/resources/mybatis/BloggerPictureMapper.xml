@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attach.dao.BloggerPictureDao">
+    <resultMap id="BaseResultMap" type="com.common.entity.pojo.BloggerPicture">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="blogger_id" jdbcType="BIGINT" property="bloggerId"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="upload_date" jdbcType="TIMESTAMP" property="uploadDate"/>
+        <result column="suffx" jdbcType="VARCHAR" property="suffx"/>
+        <result column="size" jdbcType="BIGINT" property="size"/>
+        <result column="width" jdbcType="INTEGER" property="width"/>
+        <result column="height" jdbcType="INTEGER" property="height"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="cite_num" jdbcType="INTEGER" property="citeNum"/>
+        <result column="thumb_path" jdbcType="VARCHAR" property="thumbPath"/>
+        <result column="media_type" jdbcType="VARCHAR" property="mediaType"/>
+        <result column="file_key" jdbcType="VARCHAR" property="fileKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, blogger_id, path, title, upload_date, suffx, size, width, height, update_date,
+        cite_num, thumb_path, media_type, file_key
+    </sql>
+    <select id="selectPictureByExample" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from e_blogger_picture
+        <where>
+            <if test="query.keywords != null and query.keywords != ''">
+                <bind name="pattern" value="'%'+query.keywords + '%'"></bind>
+                and title like #{pattern}
+            </if>
+            <if test="query.mediaType != null and query.mediaType != ''">
+                and MEDIA_TYPE = #{query.mediaType}
+            </if>
+            <if test="userId != null and userId != ''">
+                and BLOGGER_ID = #{userId,jdbcType=BIGINT}
+            </if>
+        </where>
+        order by upload_date desc
+    </select>
+</mapper>
