@@ -1,6 +1,11 @@
 server:
   port: 5040
 spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123
   devtools:
     restart:
       enabled: true
@@ -21,6 +26,7 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+  mapper-locations: classpath:/mybatis/*.xml
 # Feign对Sentinel的支持
 feign:
   sentinel:

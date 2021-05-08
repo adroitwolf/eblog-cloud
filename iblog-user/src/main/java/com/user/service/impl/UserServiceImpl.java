@@ -1,18 +1,23 @@
 package com.user.service.impl;
 
+import com.common.entity.dto.UserDto;
 import com.common.entity.pojo.BloggerAccount;
 import com.common.entity.pojo.BloggerProfile;
 import com.common.entity.vo.BaseResponse;
+import com.common.exception.NotFoundException;
 import com.user.dao.BloggerAccountDao;
 import com.user.dao.BloggerProfileDao;
 import com.user.entity.vo.UserDetail;
 import com.user.entity.vo.UserParams;
-import com.user.feign.AttachmentService;
+import com.user.feign.service.AttachmentService;
+import com.user.feign.service.TokenService;
 import com.user.service.UserService;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +28,8 @@ import java.util.Objects;
  *
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
-
+@Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     AttachmentService attachmentService;
@@ -37,8 +43,8 @@ public class UserServiceImpl implements UserService {
 //    @Autowired
 //    RoleService roleService;
 //
-//    @Autowired
-//    TokenService tokenService;
+    @Autowired
+    TokenService tokenService;
 
 
     private final String TITLE = "用户头像";
@@ -74,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
         BaseResponse baseResponse = new BaseResponse();
 
-        Long userId = tokenService.getUserIdWithToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         BloggerProfile bloggerProfile = new BloggerProfile();
 
@@ -90,7 +96,7 @@ public class UserServiceImpl implements UserService {
 //        bloggerAccountMapper.updateByPrimaryKeySelective(bloggerAccount);
 
 
-//    这个才是昵称
+        //    这个才是昵称
         bloggerProfile.setBloggerId(userId);
 
         BeanUtils.copyProperties(userParams, bloggerProfile);
@@ -98,7 +104,7 @@ public class UserServiceImpl implements UserService {
 //        bloggerProfile.setAboutMe(userParams.getAboutMe());
 //        bloggerProfileMapper.updateByExampleSelective(bloggerProfileWithBLOBs,bloggerProfileExample);
 
-        bloggerProfileMapper.updateByPrimaryKeySelective(bloggerProfile);
+        bloggerProfileDao.updateByPrimaryKeySelective(bloggerProfile);
 
         UserDetail userDetail = new UserDetail();
 
@@ -113,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse getUserDetailByToken(@NonNull String token) {
-        Long id = tokenService.getUserIdWithToken(token);
+        Long id = tokenService.getUserIdByToken(token);
 
         return new BaseResponse(HttpStatus.OK.value(), "", findUserDetailByBloggerId(id));
 
@@ -122,14 +128,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public BaseResponse updateAvatar(@NonNull MultipartFile avatar, @NonNull String token) {
-        Long id = tokenService.getUserIdWithToken(token);
+        Long id = tokenService.getUserIdByToken(token);
 
 //        删除原有附件
 
-        BloggerProfile bloggerProfile = bloggerProfileMapper.selectByPrimaryKey(id);
+        BloggerProfile bloggerProfile = bloggerProfileDao.selectByPrimaryKey(id);
 
         if (null != bloggerProfile.getAvatarId()) {
-            attachmentService.deletePic(bloggerProfile.getAvatarId());
+            attachmentService.delAttachment(bloggerProfile.getAvatarId());
         }
 
         //        添加现有附件
@@ -137,16 +143,16 @@ public class UserServiceImpl implements UserService {
         BloggerProfile profile = new BloggerProfile();
         profile.setBloggerId(id);
         profile.setAvatarId(picId);
-        bloggerProfileMapper.updateByPrimaryKeySelective(profile);
+        bloggerProfileDao.updateByPrimaryKeySelective(profile);
         return new BaseResponse(HttpStatus.OK.value(), "更新头像成功", attachmentService.getPathById(picId));
     }
 
 
     @Override
-    public UserDTO getUserDTOById(Long id) {
-        BloggerProfile bloggerProfile = bloggerProfileMapper.selectByPrimaryKey(id);
+    public UserDto getUserDTOById(Long id) {
+        BloggerProfile bloggerProfile = bloggerProfileDao.selectByPrimaryKey(id);
 
-        UserDTO user = new UserDTO();
+        UserDto user = new UserDto();
 
         user.setId(bloggerProfile.getBloggerId());
 
@@ -162,6 +168,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getNicknameById(Long id) {
-        return bloggerProfileMapper.selectByPrimaryKey(id).getNickname();
+        BloggerProfile profile = bloggerProfileDao.selectByPrimaryKey(id);
+        if(Objects.isNull(profile)){
+            throw new NotFoundException("用户未找到！");
+        }
+        return profile.getNickname();
     }
 }

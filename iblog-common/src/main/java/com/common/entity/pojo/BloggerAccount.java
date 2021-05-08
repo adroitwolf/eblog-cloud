@@ -23,6 +23,8 @@ public class BloggerAccount {
 
     private Date registerDate;
 
+    private String username;
+
     private String email;
 
     private String isEnabled;

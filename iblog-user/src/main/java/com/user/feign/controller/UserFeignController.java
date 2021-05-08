@@ -1,6 +1,7 @@
-package com.attach.feign;
+package com.user.feign.controller;
 
-import com.attach.service.AttachmentService;
+import com.common.entity.dto.UserDto;
+import com.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,17 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <pre>FeignController</pre>
- * 暴露给其他服务的接口
+ *  暴露给其他微服务的接口
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 @RestController
-@RequestMapping("/feign")
-public class FeignController {
-    @Autowired
-    AttachmentService attachmentService;
+@RequestMapping("feign/user")
+public class UserFeignController {
 
-    @GetMapping("/path/id/{id}")
-    String getPathById(@PathVariable("id")Long id){
-        return attachmentService.getPathById(id);
+    @Autowired
+    UserService userService;
+
+    @GetMapping("/getUserDTO/{id}")
+    public  UserDto getUserDTOById(@PathVariable("id") Long id){
+        return userService.getUserDTOById(id);
     }
 }

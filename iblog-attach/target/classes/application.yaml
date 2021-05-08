@@ -19,6 +19,7 @@ spring:
     password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
+  mapper-locations: classpath:/mybatis/*.xml
   configuration:
     map-underscore-to-camel-case: true
 # Feign对Sentinel的支持

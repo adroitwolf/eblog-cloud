@@ -1,6 +1,7 @@
 package com.auth.service.impl;
 
 import com.auth.props.JWTProperties;
+import com.auth.service.JwtService;
 import com.auth.service.RedisService;
 import com.auth.service.RoleService;
 import com.auth.service.TokenService;
@@ -17,6 +18,7 @@ import com.common.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -33,13 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class TokenServiceImpl implements TokenService {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     RoleService roleService;
-
-    @Autowired
-    AccountService accountService;
 
     @Autowired
     RedisService redisService;
@@ -48,12 +44,18 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     JWTProperties jwtProperties;
 
+    @Autowired
+    JwtService jwtService;
+
 
     @Override
     public AutoToken buildAutoToken(User user) {
         AutoToken autoToken = new AutoToken();
-        String accessToken = Optional.ofNullable(generateToken(user)).orElseThrow(() -> new ServiceException("服务异常"));
+        String accessToken = generateToken(user);
 
+        if(StringUtils.isEmpty(accessToken)){
+            return null;
+        }
         String refreshToken = CommonUtils.randomUUIDWithoutDash();
 
         redisService.putAutoToken(refreshToken, user.getId(), jwtProperties.getRefreshExpires(), TimeUnit.DAYS);
@@ -78,25 +80,25 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void authentication(Long id, String token) {
+    public boolean authentication(Long id, String token) {
         if (roleService.getRolesByUserId(getUserIdWithToken(token)).contains(RoleEnum.ADMIN)) {
-            return;
+            return true;
         } else if (null == id || !id.equals(getUserIdWithToken(token))) {
-
-            throw new UnAccessException("您没有权限进行该操作");
+            return false;
         }
+        return true;
     }
 
     //    利用Jwt生成token
     @Override
     public String generateToken(User user) {
-        return JwtUtil.generateToken(user);
+        return jwtService.generateToken(user);
     }
 
     @Override
     public boolean verifierToken(String token) {
         try {
-            JwtUtil.generateVerifier().verify(token);
+            jwtService.generateVerifier().verify(token);
             return true;
         } catch (JWTVerificationException e) {
             log.error(e.getMessage());
@@ -109,12 +111,9 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean isExpire(String token) {
         try {
-            Date date = JwtUtil.generateExpirationDate(token);
-            return date.compareTo(new Date()) <= 0 ? true : false;
-        } catch (JWTDecodeException e) {
-            return false;
+            Date date = jwtService.generateExpirationDate(token);
+            return date.compareTo(new Date()) <= 0;
         } catch (Exception e) {
-
             return false;
         }
 
@@ -122,13 +121,13 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public List<RoleEnum> getRoles(String token) {
-        return JwtUtil.generateRole(token);
+        return jwtService.generateRole(token);
     }
 
 
     @Override
     public JWTVerifier getVerifierWithToken(String token) {
-        return JwtUtil.generateVerifier();
+        return jwtService.generateVerifier();
     }
 
     @Override

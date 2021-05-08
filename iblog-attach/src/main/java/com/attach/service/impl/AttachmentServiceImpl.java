@@ -19,13 +19,13 @@ import com.common.entity.vo.DataGrid;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
@@ -57,10 +57,22 @@ public class AttachmentServiceImpl implements AttachmentService {
     private static final Integer DEFAULT_NUM = 0;
 
 
+    @Override
+    public String getPicPathById(Long id) {
+        String filekey = selectPicById(id);
+        if(StringUtils.isEmpty(filekey)){
+            return "";
+        }
+        return covertAttachmentPath(filekey);
+    }
 
     @Override
     public String selectPicById(Long id) {
-        return bloggerPictureDao.selectByPrimaryKey(id).getFileKey();
+        BloggerPicture bloggerPicture = bloggerPictureDao.selectByPrimaryKey(id);
+        if(Objects.isNull(bloggerPicture)){
+            return "";
+        }
+        return bloggerPicture.getFileKey();
     }
 
 
@@ -99,13 +111,18 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     @Transactional
     public BaseResponse uploadAttachment(MultipartFile file, Long userId) {
-        uploadFile(file, userId, null);
+        if(uploadFile(file, userId, null).equals(-1L)){
+            throw new BadRequestException("附件上传失败");
+        }
         return new BaseResponse(HttpStatus.OK.value(), null, "上传附件成功");
     }
 
     @Override
     public Long uploadFile(MultipartFile file, Long userId, String title) {
-        ImageFile imageFile = UploadUtil.uploadFile(file,imgPath).orElseThrow(() -> new BadRequestException("用户上传图片失败"));
+        ImageFile imageFile = UploadUtil.uploadFile(file,imgPath);
+        if(Objects.isNull(imageFile)){
+            return (long) -1;
+        }
         BloggerPicture bloggerPicture = new BloggerPicture();
 
         bloggerPicture.setId(CommonUtils.nextId());
@@ -125,7 +142,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         BeanUtils.copyProperties(imageFile, bloggerPicture);
 
 //        判断用户是否自主赋值title
-        if (!StringUtils.isBlank(title)) {
+        if (!StringUtils.isEmpty(title)) {
             bloggerPicture.setTitle(title);
         }
 

@@ -54,6 +54,18 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--redis 框架接管高并发-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!--邮箱发送邮件-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.adroitwolf</groupId>

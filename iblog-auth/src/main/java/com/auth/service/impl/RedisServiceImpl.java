@@ -69,7 +69,7 @@ public class RedisServiceImpl implements RedisService {
         Long id = (Long) redisTemplate.opsForValue().get(key);
 
         if (null == id || id.equals(0L)) {
-            throw new UnAuthenticationException("ReFreshToken凭证已失效，请重新登录");
+            return 0L;
         }
         return id;
     }

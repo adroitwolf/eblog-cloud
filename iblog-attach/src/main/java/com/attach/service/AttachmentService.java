@@ -13,6 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 public interface AttachmentService {
+
+    /**
+     * 根据图片id获取可以访问的url
+     * @param id
+     * @return
+     */
+    String getPicPathById(Long id);
+
     /**
      * 功能描述: 根据图片ID获取到服务器物理层盘上的图片名称
      *

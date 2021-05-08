@@ -12,7 +12,7 @@
         <result column="nearest_modify_date" jdbcType="TIMESTAMP" property="nearestModifyDate"/>
         <result column="tag_title" jdbcType="VARCHAR" property="tagTitle"/>
     </resultMap>
-    <select id="selectByUserExample" parameterType="com.blog.entity.vo.QueryParams" resultMap="BaseResultMap">
+    <select id="selectByUserExample" parameterType="com.common.entity.vo.QueryParams" resultMap="BaseResultMap">
         select
         a.id, a.blogger_id, a.status, a.title,a.picture_id , a.summary,a.release_date, a.nearest_modify_date,
         a.tag_title
@@ -32,4 +32,11 @@
         </where>
         order by a.release_date desc
     </select>
+
+    <update id="deletePicByPicId" parameterType="java.lang.Long">
+        update blog
+        set picture_id = null
+        where picture_id = #{picId,jdbcType=BIGINT}
+
+    </update>
 </mapper>

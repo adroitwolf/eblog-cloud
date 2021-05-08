@@ -28,7 +28,7 @@ public class UploadUtil {
 
     private UploadUtil(){}
 
-    public static Optional<ImageFile>  uploadFile(MultipartFile file,String imgPath) {
+    public static ImageFile  uploadFile(MultipartFile file,String imgPath) {
 
 
 
@@ -63,7 +63,7 @@ public class UploadUtil {
         } catch (IOException e) {
             log.error("上传文件出错:{}",e.getMessage());
 
-            return Optional.empty();
+            return null;
         }
 
         //开始创建pojo对象
@@ -83,7 +83,7 @@ public class UploadUtil {
         imageFile.setHeight(image.getHeight());
         imageFile.setWidth(image.getWidth());
 
-        return Optional.of(imageFile);
+        return imageFile;
     }
 
 

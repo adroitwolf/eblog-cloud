@@ -45,7 +45,7 @@ public interface TokenService {
      * @Author: WHOAMI
      * @Date: 2020/1/30 17:55
      */
-    void authentication(Long id, String token);
+    boolean authentication(Long id, String token);
 
     /**
      * 功能描述: 生成token

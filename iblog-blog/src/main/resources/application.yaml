@@ -1,6 +1,11 @@
 server:
   port: 5010
 spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123
   devtools:
     restart:
       enabled: true
@@ -19,6 +24,7 @@ spring:
     password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
+  mapper-locations: classpath:/mybatis/*.xml
   configuration:
     map-underscore-to-camel-case: true
 # Feign对Sentinel的支持

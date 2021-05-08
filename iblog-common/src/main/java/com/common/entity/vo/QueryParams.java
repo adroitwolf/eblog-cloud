@@ -1,4 +1,4 @@
-package com.blog.entity.vo;
+package com.common.entity.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -54,12 +54,20 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--redis 框架接管高并发-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.adroitwolf</groupId>
             <artifactId>iblog-common</artifactId>
             <version>${iblog.version}</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

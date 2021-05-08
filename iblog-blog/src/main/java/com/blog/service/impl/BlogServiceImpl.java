@@ -2,10 +2,14 @@ package com.blog.service.impl;
 
 import com.blog.dao.BlogContentDao;
 import com.blog.dao.BlogDao;
+import com.blog.entity.model.PopularBlog;
 import com.blog.entity.vo.BlogDetailWithAuthor;
-import com.blog.entity.vo.QueryParams;
+import com.common.entity.vo.QueryParams;
 import com.blog.feign.service.AttachmentService;
+import com.blog.feign.service.UserService;
 import com.blog.service.BlogService;
+import com.blog.service.BlogStatusService;
+import com.blog.service.RedisService;
 import com.common.entity.dto.UserDto;
 import com.common.exception.NotFoundException;
 import com.common.entity.pojo.Blog;
@@ -68,9 +72,6 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     BlogContentDao blogContentDao;
 
-
-    @Autowired
-    BloggerProfileMapper bloggerProfileMapper;
 
     @Autowired
     UserService userService;
@@ -169,7 +170,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BaseResponse getArticleListByTag(run.app.entity.VO.PageInfo pageInfo, String tag) {
+    public BaseResponse getArticleListByTag(com.common.entity.vo.PageInfo pageInfo, String tag) {
 
         Long id = tagService.selectIdWithName(tag);
 
@@ -183,12 +184,12 @@ public class BlogServiceImpl implements BlogService {
             PageInfo<Long> longPageInfo = new PageInfo<>(list);
 //          采取分页的方式 10-9 -19
 //            List<Long> list1 = list.subList((pageNum - 1) * pageSize, list.size()>pageNum * pageSize?pageNum*pageSize:list.size());
-// 此方法逻辑上有错误
-            List<run.app.entity.DTO.Blog> blogs = new ArrayList<>();
+            // 此方法逻辑上有错误
+            List<com.blog.entity.model.Blog> blogs = new ArrayList<>();
 
             list.stream().forEach(x -> {
-                run.app.entity.DTO.Blog blogx = new run.app.entity.DTO.Blog();
-                Blog blog = blogMapper.selectByPrimaryKey(x);
+                com.blog.entity.model.Blog blogx = new com.blog.entity.model.Blog();
+                Blog blog = blogDao.selectByPrimaryKey(x);
                 BeanUtils.copyProperties(blog, blogx);
 
                 if (!StringUtils.isBlank(blog.getTagTitle())) {
@@ -196,7 +197,7 @@ public class BlogServiceImpl implements BlogService {
                 }
 
                 if (null != blog.getPictureId()) {
-                    blogx.setPicture(attachmentService.covertAttachmentPath(attachmentService.selectPicById(blog.getPictureId())));
+                    blogx.setPicture(attachmentService.getPicPathById(blog.getPictureId()));
                 }
 
                 blogs.add(blogx);
@@ -217,7 +218,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BaseResponse getTopPosts() {
         Set<PopularBlog> popularPosts = redisService.listTop5FrmRedis();
-        if (null == popularPosts || popularPosts.size() < 5) { //说明redis不准确,需要查询数据库
+        //说明redis不准确,需要查询数据库
+        if (null == popularPosts || popularPosts.size() < 5) {
 //            todo  这里有可能会出现线程击穿
             popularPosts = new HashSet<>(blogStatusService.listTop5Posts());
 
@@ -243,7 +245,7 @@ public class BlogServiceImpl implements BlogService {
                 pic = attachmentService.getPathById(item.getPictureId());
             }
 
-            run.app.entity.DTO.Blog blog = new run.app.entity.DTO.Blog();
+            com.blog.entity.model.Blog blog = new com.blog.entity.model.Blog();
 
             BeanUtils.copyProperties(item, blog);
             blog.setTagsTitle(tagsTitle);
