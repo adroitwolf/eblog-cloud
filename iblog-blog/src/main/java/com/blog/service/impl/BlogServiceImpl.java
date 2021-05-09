@@ -1,12 +1,12 @@
 package com.blog.service.impl;
 
+import com.api.feign.service.AttachmentFeignService;
+import com.api.feign.service.UserFeignService;
 import com.blog.dao.BlogContentDao;
 import com.blog.dao.BlogDao;
 import com.blog.entity.model.PopularBlog;
 import com.blog.entity.vo.BlogDetailWithAuthor;
 import com.common.entity.vo.QueryParams;
-import com.blog.feign.service.AttachmentService;
-import com.blog.feign.service.UserService;
 import com.blog.service.BlogService;
 import com.blog.service.BlogStatusService;
 import com.blog.service.RedisService;
@@ -62,7 +62,7 @@ public class BlogServiceImpl implements BlogService {
      * @Date: 2019/9/3 18:08
      */
     @Autowired
-    AttachmentService attachmentService;
+    AttachmentFeignService attachmentFeignService;
 
     /*代码修改结束*/
 
@@ -74,13 +74,13 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Autowired
-    UserService userService;
+    UserFeignService userFeignService;
 
     @Override
     public BaseResponse getArticleList(com.common.entity.vo.PageInfo pageInfo) {
 
 
-        Example example = Example.builder(Blog.class).andWhere(WeekendSqls.<Blog>custom().andEqualTo(Blog::getStatus, "PUBLISHED")).orderByDesc("release_date").build();
+        Example example = Example.builder(Blog.class).andWhere(WeekendSqls.<Blog>custom().andEqualTo(Blog::getStatus, "PUBLISHED")).orderByDesc("releaseDate").build();
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 
@@ -152,11 +152,11 @@ public class BlogServiceImpl implements BlogService {
 
         blogDetailWithAuthor.setTagsTitle(nowTags);
 
-        String pic = null != blog.getPictureId() ? attachmentService.getPathById(blog.getPictureId()) : null;
+        String pic = null != blog.getPictureId() ? attachmentFeignService.getPathById(blog.getPictureId()) : null;
 
         blogDetailWithAuthor.setPicture(pic);
 
-        UserDto author = userService.getUserDTOById(blog.getBloggerId());
+        UserDto author = userFeignService.getUserDTOById(blog.getBloggerId());
 
         blogDetailWithAuthor.setAuthor(author);
 
@@ -197,7 +197,7 @@ public class BlogServiceImpl implements BlogService {
                 }
 
                 if (null != blog.getPictureId()) {
-                    blogx.setPicture(attachmentService.getPicPathById(blog.getPictureId()));
+                    blogx.setPicture(attachmentFeignService.getPicPathById(blog.getPictureId()));
                 }
 
                 blogs.add(blogx);
@@ -242,7 +242,7 @@ public class BlogServiceImpl implements BlogService {
             // 获取图片url
 
             if (null != item.getPictureId()) {
-                pic = attachmentService.getPathById(item.getPictureId());
+                pic = attachmentFeignService.getPathById(item.getPictureId());
             }
 
             com.blog.entity.model.Blog blog = new com.blog.entity.model.Blog();

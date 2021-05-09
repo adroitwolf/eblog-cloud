@@ -1,9 +1,4 @@
-./**/target/**
-./**/**.iml
-!**/src/main/**
-!**/src/test/**
 
-**/.idea/**
 ### IntelliJ IDEA ###
 .idea
 *.iws

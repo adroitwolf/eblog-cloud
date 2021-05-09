@@ -27,3 +27,16 @@ spring:
             allowed-headers: "*"
             allow-credentials: true
             # exposedHeaders: "Content-Disposition,Content-Type,Cache-Control"
+#      routes:
+#        - id: iblog-attach
+#          uri: lb://iblog-attach
+#          predicates:
+#            - Path=/attch/**
+#        - id: iblog-blog
+#          uri: lb://iblog-attach
+#          predicates:
+#            - Path=/blog/**
+#        - id: iblog-user
+#          uri: lb://iblog-attach
+#          predicates:
+#            - Path=/user/**

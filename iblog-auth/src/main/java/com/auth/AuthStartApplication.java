@@ -14,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableConfigurationProperties(JWTProperties.class)
+@EnableConfigurationProperties
 @MapperScan(basePackages={"com.auth.dao"})
 public class AuthStartApplication {
     public static void main(String[] args) {

@@ -38,13 +38,13 @@ public interface AttachmentService {
      * @param userId
      * @return
      */
-    BaseResponse getAttachmentList(PageInfo pageInfo, AttachmentQueryParams attachmentQueryParams, Long userId);
+    BaseResponse getAttachmentList(PageInfo pageInfo, AttachmentQueryParams attachmentQueryParams, String token);
 
     /**
      * 功能描述: 用户上传附件
      *
      */
-    BaseResponse uploadAttachment(MultipartFile file, Long userId);
+    BaseResponse uploadAttachment(MultipartFile file, String token);
 
     /**
      * 功能描述:用户上传照片
@@ -95,7 +95,7 @@ public interface AttachmentService {
      * @Author: WHOAMI
      * @Date: 2020/1/30 19:30
      */
-    BaseResponse updateInfo(Long id, AttachmentParams attachmentParams, Long userId);
+    BaseResponse updateInfo(Long id, AttachmentParams attachmentParams,String token);
 
     /**
      * 功能描述: 获取到附件的基本信息
@@ -135,7 +135,7 @@ public interface AttachmentService {
      * @Author: WHOAMI
      * @Date: 2020/1/30 19:39
      */
-    BaseResponse findAllMediaType(Long userId);
+    BaseResponse findAllMediaType(String token);
 
     /**
      * 功能描述: 改变附件当前引用人数

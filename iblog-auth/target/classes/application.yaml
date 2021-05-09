@@ -23,12 +23,15 @@ spring:
     username: root
     password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:/mybatis/*.xml
 # Feign对Sentinel的支持
 feign:
+  httpclient:
+    enabled: true
   sentinel:
     enabled: true
 

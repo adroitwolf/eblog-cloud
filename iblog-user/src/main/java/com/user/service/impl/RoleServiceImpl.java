@@ -4,6 +4,7 @@ import com.common.entity.pojo.BloggerRole;
 import com.common.entity.pojo.BloggerRoleMapKey;
 import com.common.enums.RoleEnum;
 import com.common.exception.ServiceException;
+import com.common.utils.CommonUtils;
 import com.user.dao.BloggerRoleDao;
 import com.user.dao.BloggerRoleMapDao;
 import com.user.service.RoleService;
@@ -36,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
     public void setRolesWithUserId(List<RoleEnum> roles, Long userId) {
         List<BloggerRoleMapKey> result = roles.stream().map(roleEnum -> {
             Long roleId = getRoleIdByType(roleEnum);
-            return new BloggerRoleMapKey(userId, roleId);
+            return BloggerRoleMapKey.builder().id(CommonUtils.nextId()).userId(userId).roleId(roleId).build();
         }).collect(Collectors.toList());
 
         bloggerRoleMapDao.insertList(result);

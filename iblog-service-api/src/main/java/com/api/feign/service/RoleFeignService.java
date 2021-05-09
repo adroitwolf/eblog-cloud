@@ -1,5 +1,6 @@
-package com.blog.feign.service;
+package com.api.feign.service;
 
+import com.api.feign.service.factory.RoleFeignServiceFallBackFactory;
 import com.common.enums.RoleEnum;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,7 @@ import java.util.List;
  * @author <p>ADROITWOLF</p> 2021-05-08
  */
 @FeignClient(name = "iblog-user")
-@Component
-public interface RoleService {
+public interface RoleFeignService {
     @GetMapping("/feign/role/getRoles/{id}")
     List<RoleEnum> getRolesByUserId(@PathVariable("id") Long userId);
 }

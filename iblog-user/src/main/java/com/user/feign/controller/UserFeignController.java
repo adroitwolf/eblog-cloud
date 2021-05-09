@@ -24,4 +24,9 @@ public class UserFeignController {
     public  UserDto getUserDTOById(@PathVariable("id") Long id){
         return userService.getUserDTOById(id);
     }
+
+    @GetMapping("/getNickname/{id}")
+    public String getNicknameById(@PathVariable("id")Long id){
+        return userService.getNicknameById(id);
+    }
 }

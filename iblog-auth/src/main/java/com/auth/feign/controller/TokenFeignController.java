@@ -20,30 +20,30 @@ public class TokenFeignController {
     @Autowired
     TokenService tokenService;
 
-    @GetMapping("/getUserId/{token}")
+    @PostMapping("/getUserId/{token}")
     public Long getUserIdByToken(@PathVariable("token")String token){
         return tokenService.getUserIdWithToken(token);
     }
 
 
-    @GetMapping("/authentication")
-    public boolean authentication(Long id, String token){
+    @PostMapping("/authentication")
+    public boolean authentication(@RequestParam("id") Long id,@RequestParam("token") String token){
         return tokenService.authentication(id,token);
     }
 
-    @GetMapping("/getRoles/{token}")
+    @PostMapping("/getRoles/{token}")
     public List<RoleEnum> getRoles(@PathVariable("token") String token){
         return tokenService.getRoles(token);
     }
 
-    @GetMapping("/buildToken")
-    public AutoToken buildAutoToken(User user){
+    @PostMapping("/buildToken")
+    public AutoToken buildAutoToken(@RequestBody  User user){
         return tokenService.buildAutoToken(user);
     }
 
 
 
-    @GetMapping("/refreshToken/getUserId/{token}")
+    @PostMapping("/refreshToken/getUserId/{token}")
     public Long getUserIdByRefreshToken(@PathVariable("token") String token){
         return tokenService.getUserIdByRefreshToken(token);
     }

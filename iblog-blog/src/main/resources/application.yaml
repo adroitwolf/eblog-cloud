@@ -1,6 +1,8 @@
 server:
   port: 5010
 spring:
+  main:
+    allow-bean-definition-overriding: true
   redis:
     database: 0
     host: 127.0.0.1
@@ -10,7 +12,7 @@ spring:
     restart:
       enabled: true
   application:
-    name: iblog-portal-blog
+    name: iblog-blog
   cloud:
     nacos:
       discovery:

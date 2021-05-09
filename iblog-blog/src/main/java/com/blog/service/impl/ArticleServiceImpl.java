@@ -1,5 +1,9 @@
 package com.blog.service.impl;
 
+import com.api.feign.service.AttachmentFeignService;
+import com.api.feign.service.RoleFeignService;
+import com.api.feign.service.TokenFeignService;
+import com.api.feign.service.UserFeignService;
 import com.blog.dao.BlogContentDao;
 import com.blog.dao.BlogDao;
 import com.blog.dao.BlogLabelDao;
@@ -9,10 +13,6 @@ import com.blog.entity.vo.ArticleParams;
 import com.blog.entity.vo.BlogDetail;
 import com.blog.entity.vo.BlogDetailWithAuthor;
 import com.common.entity.vo.QueryParams;
-import com.blog.feign.service.AttachmentService;
-import com.blog.feign.service.RoleService;
-import com.blog.feign.service.TokenService;
-import com.blog.feign.service.UserService;
 import com.blog.service.ArticleService;
 import com.blog.service.TagService;
 import com.common.entity.dto.UserDto;
@@ -72,7 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
 
     @Autowired
-    AttachmentService attachmentService;
+    AttachmentFeignService attachmentFeignService;
 
     /*代码修改结束*/
     @Autowired
@@ -81,10 +81,10 @@ public class ArticleServiceImpl implements ArticleService {
     //    @Autowired
 //    UserService userService;
     @Autowired
-    TokenService tokenService;
+    TokenFeignService tokenFeignService;
 
     @Autowired
-    RoleService roleService;
+    RoleFeignService roleFeignService;
 
     @Autowired
     TagService tagService;
@@ -93,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
     BlogContentDao blogContentDao;
 
     @Autowired
-    UserService userService;
+    UserFeignService userFeignService;
 
 
 
@@ -106,7 +106,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Long bloggerId;
 //        if((bloggerId =userService.getUserIdByToken(token)) == -1){
-        if ((bloggerId = tokenService.getUserIdByToken(token)) == -1) {
+        if ((bloggerId = tokenFeignService.getUserIdByToken(token)) == -1) {
             throw new BadRequestException("用户信息错误！");
         }
         blog.setBloggerId(bloggerId);
@@ -129,7 +129,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (null != articleParams.getPictureId()) {
             blog.setPictureId(articleParams.getPictureId());
 //            相对应的应该让改图片引用人数+1
-            attachmentService.changePictureStatus(blog.getPictureId(), CiteNumEnum.ADD);
+            attachmentFeignService.changePictureStatus(blog.getPictureId(), CiteNumEnum.ADD);
         }
 
         /*增加代码结束*/
@@ -140,7 +140,7 @@ public class ArticleServiceImpl implements ArticleService {
          * @Author: WHOAMI
          * @Date: 2020/1/10 20:29
          */
-        List<RoleEnum> roles = roleService.getRolesByUserId(bloggerId);
+        List<RoleEnum> roles = roleFeignService.getRolesByUserId(bloggerId);
         String status = roles.contains(RoleEnum.ADMIN) ? ArticleStatusEnum.PUBLISHED.getName() : ArticleStatusEnum.CHECK.getName();
 
         blog.setStatus(status);
@@ -180,7 +180,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Blog blog1 = blogDao.selectByPrimaryKey(blogId);
 
-        if(!tokenService.authentication(blog1.getBloggerId(), token)){
+        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
             throw new UnAccessException("不能执行此操作");
         }
 
@@ -210,10 +210,10 @@ public class ArticleServiceImpl implements ArticleService {
              * @Date: 2019/11/10 13:22
              */
             if (null == blog1.getPictureId()) {
-                attachmentService.changePictureStatus(picture_id, CiteNumEnum.ADD);
+                attachmentFeignService.changePictureStatus(picture_id, CiteNumEnum.ADD);
             } else if (picture_id != blog1.getPictureId()) {
-                attachmentService.changePictureStatus(picture_id, CiteNumEnum.ADD);
-                attachmentService.changePictureStatus(blog1.getPictureId(), CiteNumEnum.REDUCE);
+                attachmentFeignService.changePictureStatus(picture_id, CiteNumEnum.ADD);
+                attachmentFeignService.changePictureStatus(blog1.getPictureId(), CiteNumEnum.REDUCE);
             }
 
 
@@ -225,7 +225,7 @@ public class ArticleServiceImpl implements ArticleService {
         blog.setId(blogId);
         blog.setNearestModifyDate(new Date());
         BeanUtils.copyProperties(articleParams, blog);
-        String status = tokenService.getRoles(token).contains(RoleEnum.ADMIN) ? ArticleStatusEnum.PUBLISHED.getName() : ArticleStatusEnum.CHECK.getName();
+        String status = tokenFeignService.getRoles(token).contains(RoleEnum.ADMIN) ? ArticleStatusEnum.PUBLISHED.getName() : ArticleStatusEnum.CHECK.getName();
         blog.setStatus(status);
         //todo tag问题
         blog.setTagTitle(nowTagsString);
@@ -265,7 +265,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new UnAccessException("请不要尝试非法操作");
         }
 
-        if(!tokenService.authentication(blog1.getBloggerId(), token)){
+        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
             throw new UnAccessException("不能执行此操作");
         }
         Blog blog = new Blog();
@@ -273,7 +273,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        String articleStatus =ArticleStatusEnum.valueOf(status).equals(ArticleStatusEnum.PUBLISHED) ?
 //                (tokenService.getRoles(token).contains(RoleEnum.ADMIN)?ArticleStatusEnum.PUBLISHED.getName():ArticleStatusEnum.CHECK.getName()):ArticleStatusEnum.RECYCLE.getName();
         StringBuilder articleStatus = new StringBuilder();
-        if (tokenService.getRoles(token).contains(RoleEnum.ADMIN)) {
+        if (tokenFeignService.getRoles(token).contains(RoleEnum.ADMIN)) {
             articleStatus.append(ArticleStatusEnum.valueOf(status));
         }
 
@@ -311,7 +311,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (Objects.isNull(blog)) { //查询没有相关博客
             throw new NotFoundException("没有相关博客信息");
         }
-        if(!tokenService.authentication(blog.getBloggerId(), token)){
+        if(!tokenFeignService.authentication(blog.getBloggerId(), token)){
             throw new UnAccessException("不能执行此操作");
         }
 
@@ -331,7 +331,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 //        博客缩略图问题
         if (null != blog.getPictureId()) {
-            blogDetail.setPicture(attachmentService.getPathById(blog.getPictureId()));
+            blogDetail.setPicture(attachmentFeignService.getPathById(blog.getPictureId()));
         }
 
         baseResponse.setData(blogDetail);
@@ -352,7 +352,7 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("查询目标" + postQueryParams.toString());
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
-        List<Blog> blogList = blogDao.selectByUserExample(postQueryParams, tokenService.getUserIdByToken(token));
+        List<Blog> blogList = blogDao.selectByUserExample(postQueryParams, tokenFeignService.getUserIdByToken(token));
 
         PageInfo<Blog> list = new PageInfo<>(blogList);
 
@@ -369,7 +369,7 @@ public class ArticleServiceImpl implements ArticleService {
             String pic = "";
 //            获取博客图片逻辑路径
             if (null != item.getPictureId()) {
-                pic = attachmentService.getPathById(item.getPictureId());
+                pic = attachmentFeignService.getPathById(item.getPictureId());
             }
             com.blog.entity.model.Blog blog = new com.blog.entity.model.Blog();
             BeanUtils.copyProperties(item, blog);
@@ -428,7 +428,7 @@ public class ArticleServiceImpl implements ArticleService {
             String pic = "";
 //            获取博客图片逻辑路径
             if (null != item.getPictureId()) {
-                pic = attachmentService.getPathById(item.getPictureId());
+                pic = attachmentFeignService.getPathById(item.getPictureId());
             }
 
             BlogDetailWithAuthor blog = new BlogDetailWithAuthor();
@@ -440,7 +440,7 @@ public class ArticleServiceImpl implements ArticleService {
             blog.setTagsTitle(tagsTitle);
 
 //            获取博客作者相关信息
-            UserDto author = userService.getUserDTOById(item.getBloggerId());
+            UserDto author = userFeignService.getUserDTOById(item.getBloggerId());
 
             blog.setAuthor(author);
 
@@ -477,7 +477,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Blog blog1 = blogDao.selectByPrimaryKey(blogId);
 
-        if(!tokenService.authentication(blog1.getBloggerId(), token)){
+        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
             throw new UnAccessException("你没有权限操作");
         }
 
@@ -505,7 +505,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        Integer bloggerId = userService.getUserIdByToken(token);
         BaseResponse baseResponse = new BaseResponse();
 
-        Long bloggerId = tokenService.getUserIdByToken(token);
+        Long bloggerId = tokenFeignService.getUserIdByToken(token);
 
         Example example = Example.builder(Blog.class).andWhere(WeekendSqls.<Blog>custom().andEqualTo(Blog::getBloggerId, bloggerId)).build();
         // 自动装箱
@@ -543,7 +543,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (null != blog.getPictureId()) {
 
-            baseBlog.setPicture(attachmentService.getPathById(blog.getPictureId()));
+            baseBlog.setPicture(attachmentFeignService.getPathById(blog.getPictureId()));
         }
 
         return baseBlog;

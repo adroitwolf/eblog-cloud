@@ -1,10 +1,8 @@
 package com.common.entity.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -15,9 +13,13 @@ import javax.persistence.Table;
 @Table(name = "e_role_map")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 @ToString
 public class BloggerRoleMapKey {
+    @Id
+    private Long id;
+
     private Long userId;
 
     private Long roleId;

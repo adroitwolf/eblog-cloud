@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString
 public class BlogStatus {
+    @Id
     private Long id;
 
     private Integer clickcount;

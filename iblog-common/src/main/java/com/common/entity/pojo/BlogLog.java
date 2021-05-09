@@ -3,6 +3,7 @@ package com.common.entity.pojo;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @ToString
 @Data
 public class BlogLog {
+    @Id
     private Long id;
 
     private String romoteip;

@@ -1,6 +1,8 @@
 package com.user.service.impl;
 
 import cn.hutool.core.lang.Validator;
+import com.api.feign.service.AttachmentFeignService;
+import com.api.feign.service.TokenFeignService;
 import com.common.entity.model.User;
 import com.common.entity.model.UserInfo;
 import com.common.entity.pojo.BloggerAccount;
@@ -19,8 +21,6 @@ import com.user.dao.BloggerAccountDao;
 import com.user.dao.BloggerProfileDao;
 import com.user.entity.vo.LoginParams;
 import com.user.entity.vo.RegisterParams;
-import com.user.feign.service.AttachmentService;
-import com.user.feign.service.TokenService;
 import com.user.service.AccountService;
 import com.user.service.QMailService;
 import com.user.service.RedisService;
@@ -55,13 +55,13 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Autowired
-    AttachmentService attachmentService;
+    AttachmentFeignService attachmentFeignService;
 
     @Autowired
     RoleService roleService;
 
     @Autowired
-    TokenService tokenService;
+    TokenFeignService tokenFeignService;
 
 
     @Autowired
@@ -117,7 +117,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         BaseResponse baseResponse = new BaseResponse();
-        AutoToken autoToken = tokenService.buildAutoToken(userRs);
+        AutoToken autoToken = tokenFeignService.buildAutoToken(userRs);
         if(Objects.isNull(autoToken)){
             log.error("认证出现异常");
             throw new BadRequestException("认证服务出现异常");
@@ -135,7 +135,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public BaseResponse refresh(String refresh) {
-        Long userId = tokenService.getUserIdByRefreshToken(refresh);
+        Long userId = tokenFeignService.getUserIdByRefreshToken(refresh);
         if(userId.equals(0L)){
             throw new UnAuthenticationException("ReFreshToken凭证已失效，请重新登录");
         }
@@ -143,7 +143,7 @@ public class AccountServiceImpl implements AccountService {
 
         User user = convertBloggerAccount2User(bloggerAccount);
 
-        AutoToken autoToken = tokenService.buildAutoToken(user);
+        AutoToken autoToken = tokenFeignService.buildAutoToken(user);
 
         if(Objects.isNull(autoToken)){
             log.error("认证出现异常");
@@ -151,7 +151,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         //删除原来的refreshToken
-        tokenService.deleteRefreshToken(refresh);
+        tokenFeignService.deleteRefreshToken(refresh);
 
 
         BaseResponse baseResponse = new BaseResponse();
@@ -168,7 +168,7 @@ public class AccountServiceImpl implements AccountService {
     public BaseResponse updatePassword(@NonNull String oldPassword, @NonNull String newPassword, String token) {
 
         BaseResponse baseResponse = new BaseResponse();
-        Long id = tokenService.getUserIdByToken(token);
+        Long id = tokenFeignService.getUserIdByToken(token);
 
         Example example = Example.builder(BloggerAccount.class).andWhere(WeekendSqls.<BloggerAccount>custom().andEqualTo(BloggerAccount::getId, id).andEqualTo(BloggerAccount::getPassword, oldPassword)).build();
         BloggerAccount bloggerAccount = bloggerAccountDao.selectOneByExample(example);
@@ -189,7 +189,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String getEmailByToken(@NonNull String token) {
 
-        Long id = tokenService.getUserIdByToken(token);
+        Long id = tokenFeignService.getUserIdByToken(token);
 
         return getEmailById(id);
     }
@@ -349,7 +349,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public BaseResponse updateUserStatus(Long bloggerId, String status, String token) {
 //      不允许封禁自己的账户
-        if (bloggerId.equals(tokenService.getUserIdByToken(token))) {
+        if (bloggerId.equals(tokenFeignService.getUserIdByToken(token))) {
             throw new UnAccessException("不允许对自身账号进行任何操作");
         }
 
@@ -371,7 +371,7 @@ public class AccountServiceImpl implements AccountService {
 //       1.不能删除自己 2.同水平之间不能删除
 
         log.info(String.valueOf(bloggerId));
-        Long id = tokenService.getUserIdByToken(token);
+        Long id = tokenFeignService.getUserIdByToken(token);
         log.info("经过token解释过的id:{}", id);
 
         if (bloggerId.equals(id)) {
@@ -414,7 +414,7 @@ public class AccountServiceImpl implements AccountService {
             BeanUtils.copyProperties(item, userInfo);
 
             if (Objects.nonNull(item.getAvatarId())) { //查询是否头像为空
-                userInfo.setAvatar(attachmentService.getPathById(item.getAvatarId()));
+                userInfo.setAvatar(attachmentFeignService.getPathById(item.getAvatarId()));
             }
 
             //查询当前用户角色

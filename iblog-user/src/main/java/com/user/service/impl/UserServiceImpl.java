@@ -1,16 +1,15 @@
 package com.user.service.impl;
 
+import com.api.feign.service.AttachmentFeignService;
+import com.api.feign.service.TokenFeignService;
 import com.common.entity.dto.UserDto;
 import com.common.entity.pojo.BloggerAccount;
 import com.common.entity.pojo.BloggerProfile;
 import com.common.entity.vo.BaseResponse;
-import com.common.exception.NotFoundException;
 import com.user.dao.BloggerAccountDao;
 import com.user.dao.BloggerProfileDao;
 import com.user.entity.vo.UserDetail;
 import com.user.entity.vo.UserParams;
-import com.user.feign.service.AttachmentService;
-import com.user.feign.service.TokenService;
 import com.user.service.UserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
-    AttachmentService attachmentService;
+    AttachmentFeignService attachmentFeignService;
 
     @Autowired
     BloggerAccountDao bloggerAccountDao;
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
 //    RoleService roleService;
 //
     @Autowired
-    TokenService tokenService;
+TokenFeignService tokenFeignService;
 
 
     private final String TITLE = "用户头像";
@@ -64,7 +63,7 @@ public class UserServiceImpl implements UserService {
 //        需要判断是否为空
         if (Objects.nonNull(bloggerProfile.getAvatarId())) {
 
-            userDetail.setAvatar(attachmentService.getPathById(bloggerProfile.getAvatarId()));
+            userDetail.setAvatar(attachmentFeignService.getPathById(bloggerProfile.getAvatarId()));
         }
 
         //找到用户权限
@@ -80,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
         BaseResponse baseResponse = new BaseResponse();
 
-        Long userId = tokenService.getUserIdByToken(token);
+        Long userId = tokenFeignService.getUserIdByToken(token);
 
         BloggerProfile bloggerProfile = new BloggerProfile();
 
@@ -119,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse getUserDetailByToken(@NonNull String token) {
-        Long id = tokenService.getUserIdByToken(token);
+        Long id = tokenFeignService.getUserIdByToken(token);
 
         return new BaseResponse(HttpStatus.OK.value(), "", findUserDetailByBloggerId(id));
 
@@ -128,23 +127,23 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public BaseResponse updateAvatar(@NonNull MultipartFile avatar, @NonNull String token) {
-        Long id = tokenService.getUserIdByToken(token);
+        Long id = tokenFeignService.getUserIdByToken(token);
 
 //        删除原有附件
 
         BloggerProfile bloggerProfile = bloggerProfileDao.selectByPrimaryKey(id);
 
         if (null != bloggerProfile.getAvatarId()) {
-            attachmentService.delAttachment(bloggerProfile.getAvatarId());
+            attachmentFeignService.delAttachment(bloggerProfile.getAvatarId());
         }
 
         //        添加现有附件
-        Long picId = attachmentService.uploadFile(avatar, id, TITLE);
+        Long picId = attachmentFeignService.uploadFile(avatar, id, TITLE);
         BloggerProfile profile = new BloggerProfile();
         profile.setBloggerId(id);
         profile.setAvatarId(picId);
         bloggerProfileDao.updateByPrimaryKeySelective(profile);
-        return new BaseResponse(HttpStatus.OK.value(), "更新头像成功", attachmentService.getPathById(picId));
+        return new BaseResponse(HttpStatus.OK.value(), "更新头像成功", attachmentFeignService.getPathById(picId));
     }
 
 
@@ -159,7 +158,7 @@ public class UserServiceImpl implements UserService {
         user.setNickname(bloggerProfile.getNickname());
 
 
-        String avatar = null == bloggerProfile.getAvatarId() ? null : attachmentService.getPathById(bloggerProfile.getAvatarId());
+        String avatar = null == bloggerProfile.getAvatarId() ? null : attachmentFeignService.getPathById(bloggerProfile.getAvatarId());
 
         user.setAvatar(avatar);
 
@@ -170,7 +169,7 @@ public class UserServiceImpl implements UserService {
     public String getNicknameById(Long id) {
         BloggerProfile profile = bloggerProfileDao.selectByPrimaryKey(id);
         if(Objects.isNull(profile)){
-            throw new NotFoundException("用户未找到！");
+            return "";
         }
         return profile.getNickname();
     }

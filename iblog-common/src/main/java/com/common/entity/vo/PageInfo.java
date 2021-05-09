@@ -26,5 +26,7 @@ public class PageInfo {
     String sortName;
 
     @NonNull
-    String sortOrder;
+    String sortOrder  = "desc" ;
+
+
 }

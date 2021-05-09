@@ -60,6 +60,13 @@
             <artifactId>iblog-common</artifactId>
             <version>${iblog.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.adroitwolf</groupId>
+            <artifactId>iblog-service-api</artifactId>
+            <version>${iblog.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

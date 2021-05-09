@@ -1,5 +1,6 @@
 package com.attach.service.impl;
 
+import com.api.feign.service.TokenFeignService;
 import com.attach.dao.BloggerPictureDao;
 import com.attach.entity.vo.AttachmentParams;
 import com.attach.entity.vo.AttachmentQueryParams;
@@ -57,6 +58,10 @@ public class AttachmentServiceImpl implements AttachmentService {
     private static final Integer DEFAULT_NUM = 0;
 
 
+    @Autowired
+    TokenFeignService tokenFeignService;
+
+
     @Override
     public String getPicPathById(Long id) {
         String filekey = selectPicById(id);
@@ -77,7 +82,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 
     @Override
-    public BaseResponse getAttachmentList(com.common.entity.vo.PageInfo pageInfo, AttachmentQueryParams attachmentQueryParams, Long userId) {
+    public BaseResponse getAttachmentList(com.common.entity.vo.PageInfo pageInfo, AttachmentQueryParams attachmentQueryParams, String token) {
+
+        Long userId = tokenFeignService.getUserIdByToken(token);
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 
@@ -110,7 +117,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     @Transactional
-    public BaseResponse uploadAttachment(MultipartFile file, Long userId) {
+    public BaseResponse uploadAttachment(MultipartFile file, String token) {
+
+        Long userId = tokenFeignService.getUserIdByToken(token);
+
         if(uploadFile(file, userId, null).equals(-1L)){
             throw new BadRequestException("附件上传失败");
         }
@@ -191,7 +201,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     @Transactional
-    public BaseResponse updateInfo(Long id, AttachmentParams attachmentParams, Long userId) {
+    public BaseResponse updateInfo(Long id, AttachmentParams attachmentParams,String token) {
+
+        Long userId = tokenFeignService.getUserIdByToken(token);
 
         BloggerPicture bloggerPicture = bloggerPictureDao.selectByPrimaryKey(id);
 
@@ -256,7 +268,9 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public BaseResponse findAllMediaType(Long userId) {
+    public BaseResponse findAllMediaType(String token) {
+
+        Long userId = tokenFeignService.getUserIdByToken(token);
 
         return new BaseResponse(HttpStatus.OK.value(), null, bloggerPictureDao.findAllMediaType(userId));
     }

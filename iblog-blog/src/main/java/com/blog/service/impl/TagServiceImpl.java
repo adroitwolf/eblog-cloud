@@ -5,6 +5,7 @@ import com.blog.dao.BlogLabelMapDao;
 import com.blog.service.TagService;
 import com.common.entity.pojo.BlogLabel;
 import com.common.entity.pojo.BlogTagMapKey;
+import com.common.entity.pojo.BloggerRoleMapKey;
 import com.common.utils.CommonUtils;
 import com.common.entity.vo.PageInfo;
 import com.github.pagehelper.PageHelper;
@@ -47,18 +48,19 @@ public class TagServiceImpl implements TagService {
 
         tags.stream().filter(Objects::nonNull).forEach(item -> {
             Example example = Example.builder(BlogLabel.class).andWhere(WeekendSqls.<BlogLabel>custom().andEqualTo(BlogLabel::getTitle, item)).build();
+
             BlogLabel blogLabel = blogLabelDao.selectOneByExample(example);
             // 如果存在，则更新操作
             if (Objects.nonNull(blogLabel)) {
                 nowTags.add(blogLabel.getId());
                 blogLabel.setCiteNum(blogLabel.getCiteNum() + 1);
                 blogLabelDao.updateByPrimaryKey(blogLabel);
-                maps.add(new BlogTagMapKey(blogLabel.getId(), blogId));
+                maps.add(BlogTagMapKey.builder().id(CommonUtils.nextId()).tagId(blogLabel.getId()).blogId(blogId).build());
 
             } else {
                 Long id = CommonUtils.nextId();
                 blogLabelDao.insertSelective(BlogLabel.builder().citeNum(1).createDate(new Date()).id(id).build());
-                maps.add(new BlogTagMapKey(id, blogId));
+                maps.add(BlogTagMapKey.builder().id(CommonUtils.nextId()).tagId(blogLabel.getId()).blogId(blogId).build());
                 nowTags.add(id);
             }
         });
@@ -89,7 +91,10 @@ public class TagServiceImpl implements TagService {
         updateTags.stream().filter(Objects::nonNull)
                 .forEach(tags -> {
                     blogLabelDao.updateByPrimaryKeyForReduceNum(tags);
-                    blogLabelMapDao.deleteByPrimaryKey(new BlogTagMapKey(tags, blogId));
+
+                    Example delExample = Example.builder(BlogTagMapKey.class).andWhere(WeekendSqls.<BlogTagMapKey>custom().andEqualTo(BlogTagMapKey::getBlogId, blogId).andEqualTo(BlogTagMapKey::getTagId, tags)).build();
+
+                    blogLabelMapDao.deleteByExample(delExample);
                 });
 
 //        查询到现在的标签id没有的话新增
@@ -113,14 +118,14 @@ public class TagServiceImpl implements TagService {
                         BlogLabel blogLabel = BlogLabel.builder().citeNum(1).title(value).createDate(new Date()).id(id).build();
                         blogLabelDao.insertSelective(blogLabel);
 
-                        blogLabelMapDao.insertSelective(new BlogTagMapKey(id, blogId));
+                        blogLabelMapDao.insertSelective(new BlogTagMapKey(CommonUtils.nextId(),id, blogId));
 
                         nowTags.add(id);
 
                     } else {
                         log.info("id:" + label);
                         blogLabelDao.updateByPrimaryKeyForAddNum(label.getId());
-                        blogLabelMapDao.insert(new BlogTagMapKey(label.getId(), blogId));
+                        blogLabelMapDao.insert(new BlogTagMapKey(CommonUtils.nextId(),label.getId(), blogId));
                         nowTags.add(label.getId());
                     }
 

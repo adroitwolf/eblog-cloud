@@ -1,4 +1,4 @@
-package com.attach.feign;
+package com.attach.feign.controller;
 
 import com.attach.service.AttachmentService;
 import com.common.enums.CiteNumEnum;
@@ -17,7 +17,7 @@ public class AttachmentFeignController {
     @Autowired
     AttachmentService attachmentService;
 
-    @GetMapping("/path/id/{id}")
+    @PostMapping("/path/id/{id}")
     public String getPathById(@PathVariable("id")Long id){
         return attachmentService.getPathById(id);
     }
@@ -35,12 +35,12 @@ public class AttachmentFeignController {
 
 
     @PostMapping("/changeStatus")
-    public int changePictureStatus(Long id, CiteNumEnum citeNumEnum) {
+    public int changePictureStatus(@RequestParam("id") Long id,@RequestBody CiteNumEnum citeNumEnum) {
         attachmentService.changePictureStatus(id,citeNumEnum);
         return 1;
     }
 
-    @GetMapping("/getPath/{id}")
+    @PostMapping("/getPath/{id}")
     public String getPicPathById(@PathVariable("id") Long id){
         return attachmentService.getPathById(id);
     }
