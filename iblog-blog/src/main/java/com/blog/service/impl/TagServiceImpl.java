@@ -55,19 +55,18 @@ public class TagServiceImpl implements TagService {
                 nowTags.add(blogLabel.getId());
                 blogLabel.setCiteNum(blogLabel.getCiteNum() + 1);
                 blogLabelDao.updateByPrimaryKey(blogLabel);
-                maps.add(BlogTagMapKey.builder().id(CommonUtils.nextId()).tagId(blogLabel.getId()).blogId(blogId).build());
+                maps.add(BlogTagMapKey.builder().tagId(blogLabel.getId()).blogId(blogId).build());
 
             } else {
                 Long id = CommonUtils.nextId();
-                blogLabelDao.insertSelective(BlogLabel.builder().citeNum(1).createDate(new Date()).id(id).build());
-                maps.add(BlogTagMapKey.builder().id(CommonUtils.nextId()).tagId(blogLabel.getId()).blogId(blogId).build());
+                blogLabelDao.insertSelective(BlogLabel.builder().title(item).citeNum(1).createDate(new Date()).id(id).build());
+                maps.add(BlogTagMapKey.builder().tagId(id).blogId(blogId).build());
                 nowTags.add(id);
             }
         });
         // 批量更新关联表
         blogLabelMapDao.insertList(maps);
 
-        // 更新关联表
         return StringUtils.join(nowTags, ",");
 
     }
@@ -145,7 +144,7 @@ public class TagServiceImpl implements TagService {
         List<String> tags = new ArrayList<>();
 
         list.stream().filter(Objects::nonNull)
-                .forEach(x -> tags.add(blogLabelDao.selectByPrimaryKey(tags).getTitle()));
+                .forEach(x -> tags.add(blogLabelDao.selectByPrimaryKey(x).getTitle()));
 
 
         return tags;

@@ -16,7 +16,7 @@
     <select id="selectByQueryParams" parameterType="com.common.entity.vo.QueryParams" resultMap="SelfResultMap">
         select
         b.id,a.ABOUT_ME, a.NICKNAME, b.IS_ENABLED, b.REGISTER_DATE, b.EMAIL,b.USERNAME
-        from blogger_profile as a,blogger_account as b
+        from e_user_profile as a,e_account as b
         <where>
             <if test="query.keyword != '' and query.keyword != null">
                 <bind name="pattern" value="'%' + query.keyword + '%'"></bind>

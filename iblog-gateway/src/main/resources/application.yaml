@@ -1,6 +1,9 @@
 server:
   port: 5000
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
   devtools:
     restart:
       enabled: true

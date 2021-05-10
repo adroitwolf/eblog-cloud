@@ -1,6 +1,9 @@
 server:
   port: 5030
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
   main:
     allow-bean-definition-overriding: true
   redis:
@@ -42,3 +45,8 @@ mybatis:
 feign:
   sentinel:
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000

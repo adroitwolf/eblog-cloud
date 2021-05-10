@@ -50,8 +50,16 @@ public class UploadUtil {
         String finalFilename = imgPath + File.separator + filename + (null == type ? "" : ("." + type));
 
         File file1 = new File(finalFilename);
+        /**
+         * 如果路径不存在需要先创建路径
+         */
 
         try {
+            Path path = Paths.get(imgPath);
+            if(!Files.exists(path)){
+                log.info("创建文件夹:{}",imgPath);
+                Files.createDirectory(path);
+            }
             String thumbFile = file1.getParent() + File.separator + filename + "-thumb.jpg";
             image = ImageIO.read(file.getInputStream());
             file.transferTo(file1);

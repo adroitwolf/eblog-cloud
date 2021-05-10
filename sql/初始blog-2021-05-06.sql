@@ -48,7 +48,7 @@ CREATE TABLE `e_blog_status` (
 
 -- 博客标签表
 CREATE TABLE `e_blog_tag_map` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `TAG_ID` bigint(20) NOT NULL COMMENT '标签id',
   `BLOG_ID` bigint(20) NOT NULL COMMENT '博客id',
   PRIMARY KEY (`ID`) USING BTREE
@@ -113,7 +113,7 @@ INSERT INTO `e_role` VALUES (387055486085627904, 'USER', '用户');
 
 -- 用户和角色的关联表
 CREATE TABLE `e_role_map` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `USER_ID` bigint(20) NOT NULL COMMENT '用户id',
   `ROLE_ID` bigint(20) NOT NULL COMMENT '角色id',
   PRIMARY KEY (`ID`) USING BTREE

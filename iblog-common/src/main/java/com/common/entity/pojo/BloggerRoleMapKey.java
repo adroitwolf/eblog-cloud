@@ -2,6 +2,7 @@ package com.common.entity.pojo;
 
 import lombok.*;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @ToString
 public class BloggerRoleMapKey {
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Long id;
 
     private Long userId;

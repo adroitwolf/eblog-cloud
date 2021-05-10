@@ -70,6 +70,20 @@ public class HandlerExceptionController {
         return baseResponse;
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handlerNullPointerException(NullPointerException e) {
+        BaseResponse baseResponse = new BaseResponse();
+
+        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        log.debug(e.getMessage());
+
+        baseResponse.setMessage("必要字段为空");
+
+        return baseResponse;
+    }
+
 //
 //
 //

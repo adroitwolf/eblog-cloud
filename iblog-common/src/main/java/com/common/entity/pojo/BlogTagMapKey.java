@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 @Data
 public class BlogTagMapKey {
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Long id;
 
     private Long tagId;

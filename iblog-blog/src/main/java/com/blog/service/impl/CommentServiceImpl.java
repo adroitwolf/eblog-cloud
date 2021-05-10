@@ -146,12 +146,18 @@ public class CommentServiceImpl implements CommentService {
         //排序规则
         Example example ;
 
-        if(!StringUtils.isEmpty(pageInfo.getSortName()) && "desc".equals(pageInfo.getSortOrder())){
-            example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom().andEqualTo(Comments::getAuthorId,userId).andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
+        if(StringUtils.isEmpty(pageInfo.getSortName())){
+            example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom().andEqualTo(Comments::getAuthorId,userId).andEqualTo(Comments::getIsDel,(byte) 0)).build();
+        }else{
+            if("desc".equals(pageInfo.getSortOrder())){
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom().andEqualTo(Comments::getAuthorId,userId).andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
 
-        }else {
-            example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom().andEqualTo(Comments::getAuthorId,userId).andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+            }else {
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom().andEqualTo(Comments::getAuthorId,userId).andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+            }
         }
+
+
 
 
 
@@ -232,16 +238,22 @@ public class CommentServiceImpl implements CommentService {
 
 
         Example example;
-
-        if(StringUtils.isEmpty(pageInfo.getSortName()) && "desc".equals(pageInfo.getSortOrder())){
+        if(StringUtils.isEmpty(pageInfo.getSortName())){
             example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
                     .andEqualTo(Comments::getPid,0L).andEqualTo(Comments::getObjectId,id)
-            .andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
-        }else {
-            example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
-                    .andEqualTo(Comments::getPid,0L).andEqualTo(Comments::getObjectId,id)
-                    .andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+                    .andEqualTo(Comments::getIsDel,(byte) 0)).build();
+        }else{
+            if("desc".equals(pageInfo.getSortOrder())){
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                        .andEqualTo(Comments::getPid,0L).andEqualTo(Comments::getObjectId,id)
+                        .andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
+            }else {
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                        .andEqualTo(Comments::getPid,0L).andEqualTo(Comments::getObjectId,id)
+                        .andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+            }
         }
+
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 
@@ -265,14 +277,19 @@ public class CommentServiceImpl implements CommentService {
 
 
             Example cExample;
-
-            if(StringUtils.isEmpty(pageInfo.getSortName()) && "desc".equals(pageInfo.getSortOrder())){
+            if(StringUtils.isEmpty(pageInfo.getSortName())){
                 cExample = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
-                        .andEqualTo(Comments::getRoot,parent.getId())).orderByDesc(pageInfo.getSortName()).build();
-            }else {
-                cExample = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
-                        .andEqualTo(Comments::getRoot,parent.getId())).orderByAsc(pageInfo.getSortName()).build();
+                        .andEqualTo(Comments::getRoot,parent.getId())).build();
+            }else{
+                if("desc".equals(pageInfo.getSortOrder())){
+                    cExample = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                            .andEqualTo(Comments::getRoot,parent.getId())).orderByDesc(pageInfo.getSortName()).build();
+                }else {
+                    cExample = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                            .andEqualTo(Comments::getRoot,parent.getId())).orderByAsc(pageInfo.getSortName()).build();
+                }
             }
+
 
             PageHelper.startPage(1, 3);
 
@@ -301,13 +318,19 @@ public class CommentServiceImpl implements CommentService {
 
 
         Example example;
-        if(StringUtils.isEmpty(pageInfo.getSortName()) && "desc".equals(pageInfo.getSortOrder())){
+        if(StringUtils.isEmpty(pageInfo.getSortName())){
             example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
-                    .andEqualTo(Comments::getRoot,id).andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
-        }else {
-            example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
-                    .andEqualTo(Comments::getRoot,id).andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+                    .andEqualTo(Comments::getRoot,id).andEqualTo(Comments::getIsDel,(byte) 0)).build();
+        }else{
+            if("desc".equals(pageInfo.getSortOrder())){
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                        .andEqualTo(Comments::getRoot,id).andEqualTo(Comments::getIsDel,(byte) 0)).orderByDesc(pageInfo.getSortName()).build();
+            }else {
+                example = Example.builder(Comments.class).andWhere(WeekendSqls.<Comments>custom()
+                        .andEqualTo(Comments::getRoot,id).andEqualTo(Comments::getIsDel,(byte) 0)).orderByAsc(pageInfo.getSortName()).build();
+            }
         }
+
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 

@@ -79,7 +79,7 @@ public class BlogStatusServiceImpl implements BlogStatusService {
     @Override
     public List<PopularBlog> listTop5Posts() {
 
-        Example example = Example.builder(BlogStatus.class).orderByDesc("clickCount").build();
+        Example example = Example.builder(BlogStatus.class).orderByDesc("clickcount").build();
         PageHelper.startPage(0, 5);
         return blogStatusDao.selectByExample(example).stream().filter(Objects::nonNull).map(status -> {
             PopularBlog popularBlog = new PopularBlog();

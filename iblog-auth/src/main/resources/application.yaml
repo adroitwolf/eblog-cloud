@@ -1,5 +1,5 @@
 server:
-  port: 5040
+  port: 5400
 spring:
   redis:
     database: 0
@@ -30,10 +30,13 @@ mybatis:
   mapper-locations: classpath:/mybatis/*.xml
 # Feign对Sentinel的支持
 feign:
-  httpclient:
-    enabled: true
   sentinel:
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
 
 # 图片上传下载
 web:
@@ -48,6 +51,6 @@ jwt:
   # 密钥, 经过Base64加密,去等 可自行替换 默认development
   base64Secret: ZGV2ZWxvcG1lbnQ
   #jwt中过期时间设置(s)
-  jwtExpires: 20
+  jwtExpires: 1000
   # refresh过期时间(day)
   refreshExpires: 5

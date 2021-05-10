@@ -3,10 +3,13 @@ package com.user.controller.manager;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import com.common.entity.vo.QueryParams;
+import com.user.entity.vo.UserParams;
 import com.user.service.AccountService;
+import com.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -23,6 +26,10 @@ public class UserManageController {
 
     @Autowired
     AccountService accountService;
+
+
+    @Autowired
+    UserService userService;
 
     private static final String TOKEN = "Authentication";
 
@@ -47,5 +54,20 @@ public class UserManageController {
             @Valid PageInfo pageInfo,
             QueryParams queryParams) {
         return accountService.selectUserByExample(pageInfo, queryParams);
+    }
+
+
+    @PutMapping("/profile")
+    public BaseResponse updateProfile(@Valid @RequestBody UserParams userParams, HttpServletRequest request) {
+        log.debug(userParams.toString());
+        return userService.updateProfileById(userParams, request.getHeader(TOKEN));
+    }
+
+
+    //    @ApiOperation("上传用户图片")
+    @PostMapping("/updateAvatar")
+    public BaseResponse updateProfile(@RequestParam(value = "avatar", required = true) MultipartFile avatar,
+                                      HttpServletRequest request) {
+        return userService.updateAvatar(avatar, request.getHeader(TOKEN));
     }
 }

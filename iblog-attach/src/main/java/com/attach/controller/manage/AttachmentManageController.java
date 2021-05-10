@@ -7,6 +7,7 @@ import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +37,7 @@ public class AttachmentManageController {
     }
 
 
-    @PostMapping("upload")
+    @PostMapping(value = "upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @ApiOperation("上传图片")
     public BaseResponse uploadFile(MultipartFile file, HttpServletRequest request) {
         return attachmentService.uploadAttachment(file, request.getHeader(TOKEN));

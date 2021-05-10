@@ -3,6 +3,7 @@ package com.api.feign.service;
 import com.api.feign.service.factory.AttachmentServiceFallbackFactory;
 import com.common.enums.CiteNumEnum;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,7 @@ public interface AttachmentFeignService {
     @PostMapping("/feign/attach/del/{id}")
     int delAttachment(@PathVariable("id")Long id);
 
-    @PostMapping("/feign/attach/upload")
+    @PostMapping(value = "/feign/attach/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     Long uploadFile(@RequestBody MultipartFile avatar, @RequestParam("userId") Long userId,@RequestParam("title") String title);
 
     @PostMapping("/feign/attach/changeStatus")

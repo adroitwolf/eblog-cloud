@@ -1,6 +1,9 @@
 server:
   port: 5020
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
   main:
     allow-bean-definition-overriding: true
   devtools:
@@ -28,10 +31,16 @@ mybatis:
 feign:
   sentinel:
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
 
 # 图片上传下载
 web:
   upload-path: ${user.dir}/img
 
 # 文件服务器
-fileServer: http://localhost:8099
+fileServer: http://localhost:5000/${spring.application.name}/images
+resourcePath: file:${web.upload-path}/

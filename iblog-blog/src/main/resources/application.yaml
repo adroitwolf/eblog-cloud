@@ -33,6 +33,11 @@ mybatis:
 feign:
   sentinel:
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
 
 # 图片上传下载
 web:

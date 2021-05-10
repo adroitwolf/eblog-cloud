@@ -6,10 +6,12 @@ import com.common.entity.dto.UserDto;
 import com.common.entity.pojo.BloggerAccount;
 import com.common.entity.pojo.BloggerProfile;
 import com.common.entity.vo.BaseResponse;
+import com.common.enums.RoleEnum;
 import com.user.dao.BloggerAccountDao;
 import com.user.dao.BloggerProfileDao;
 import com.user.entity.vo.UserDetail;
 import com.user.entity.vo.UserParams;
+import com.user.service.RoleService;
 import com.user.service.UserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <pre>UserServiceImpl</pre>
@@ -39,9 +42,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BloggerProfileDao bloggerProfileDao;
 
-//    @Autowired
-//    RoleService roleService;
-//
+    @Autowired
+    RoleService roleService;
+
     @Autowired
 TokenFeignService tokenFeignService;
 
@@ -49,8 +52,7 @@ TokenFeignService tokenFeignService;
     private final String TITLE = "用户头像";
 
     @Override
-    public @NonNull
-    UserDetail findUserDetailByBloggerId(@NonNull Long bloggerId) {
+    public  UserDetail findUserDetailByBloggerId(@NonNull Long bloggerId) {
 
         BloggerAccount bloggerAccount = bloggerAccountDao.selectByPrimaryKey(bloggerId);
 
@@ -67,7 +69,7 @@ TokenFeignService tokenFeignService;
         }
 
         //找到用户权限
-//        userDetail.setRoles(roleService.getRolesByUserId(bloggerId).stream().map(n -> n.getAuthority()).collect(Collectors.toList()));
+        userDetail.setRoles(roleService.getRolesByUserId(bloggerId).stream().map(RoleEnum::getAuthority).collect(Collectors.toList()));
 
         return userDetail;
     }

@@ -3,6 +3,7 @@ package com.attach.feign.controller;
 import com.attach.service.AttachmentService;
 import com.common.enums.CiteNumEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,7 @@ public class AttachmentFeignController {
         return 1;
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Long uploadFile(MultipartFile avatar, Long userId, String title){
         return attachmentService.uploadFile(avatar,userId,title);
     }
