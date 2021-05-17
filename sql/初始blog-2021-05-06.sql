@@ -56,18 +56,17 @@ CREATE TABLE `e_blog_tag_map` (
 
 -- 博客账号表
 CREATE TABLE `e_account` (
-  `ID` bigint(20) unsigned NOT NULL COMMENT '用户id',
-  `PASSWORD` varchar(100) NOT NULL COMMENT '用户密码',
-  `REGISTER_DATE` datetime NOT NULL COMMENT '注册日期',
-  `EMAIL` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `IS_ENABLED` varchar(5) DEFAULT NULL COMMENT '账号是否可用',
-  PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `email` (`EMAIL`) USING BTREE COMMENT '注册邮箱'
+                             `ID` bigint(20) unsigned NOT NULL COMMENT '用户id',
+                             `PASSWORD` varchar(100) NOT NULL COMMENT '用户密码',
+                             `REGISTER_DATE` datetime NOT NULL COMMENT '注册日期',
+                             `EMAIL` varchar(50) DEFAULT NULL COMMENT '邮箱',
+                             `IS_ENABLED` varchar(5) DEFAULT NULL COMMENT '账号是否可用',
+                             `USERNAME` varchar(100) NOT NULL COMMENT '用户名',
+                             PRIMARY KEY (`ID`) USING BTREE,
+                             UNIQUE KEY `email` (`EMAIL`) USING BTREE COMMENT '注册邮箱'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- 初始化用户信息 admin / aa12356789
-INSERT INTO `e_account` VALUES (576226178340225024, '989ceb5bd91b256d775b89af4ce1c7d1', '2021-04-04 23:18:12', '', 'YES', 'admin');
-INSERT INTO `e_user_profile` VALUES (576226178340225024, NULL, 'ADMIN', NULL);
+
 
 
 -- 用户信息表
@@ -78,6 +77,11 @@ CREATE TABLE `e_user_profile` (
   `AVATAR_ID` bigint(20) DEFAULT NULL COMMENT '用户头像',
   PRIMARY KEY (`BLOGGER_ID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- 初始化用户信息 admin / aa12356789
+INSERT INTO `e_account` VALUES (576226178340225024, '989ceb5bd91b256d775b89af4ce1c7d1', '2021-04-04 23:18:12', '', 'YES', 'admin');
+INSERT INTO `e_user_profile` VALUES (576226178340225024, NULL, 'ADMIN', NULL);
+
 
 -- 用户图片表
 CREATE TABLE `e_blogger_picture` (
@@ -118,6 +122,10 @@ CREATE TABLE `e_role_map` (
   `ROLE_ID` bigint(20) NOT NULL COMMENT '角色id',
   PRIMARY KEY (`ID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户和角色的关联表';
+
+-- 初始化角色用户关联表信息
+INSERT INTO `eblog`.`e_role_map` (`USER_ID`, `ROLE_ID`) VALUES (576226178340225024, 387055486085627904)
+    INSERT INTO `eblog`.`e_role_map` (`USER_ID`, `ROLE_ID`) VALUES (576226178340225024, 387055195109982208)
 
 -- 用户评论表
 CREATE TABLE `e_comments` (

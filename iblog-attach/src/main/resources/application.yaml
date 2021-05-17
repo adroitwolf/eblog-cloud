@@ -42,5 +42,5 @@ web:
   upload-path: ${user.dir}/img
 
 # 文件服务器
-fileServer: http://localhost:5000/${spring.application.name}/images
+fileServer: ${spring.application.name}/images
 resourcePath: file:${web.upload-path}/
