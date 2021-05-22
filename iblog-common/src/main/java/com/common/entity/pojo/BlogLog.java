@@ -13,9 +13,8 @@ import java.util.Date;
  * @author <p>ADROITWOLF</p> 2021-05-06
  */
 @Table(name = "e_blog_log")
-@ToString
 @Data
-public class BlogLog {
+public class BlogLog{
     @Id
     private Long id;
 

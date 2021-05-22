@@ -1,6 +1,5 @@
 package com.common.entity.model;
 
-import com.common.entity.model.Picture;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

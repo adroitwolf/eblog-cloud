@@ -11,7 +11,7 @@ import java.util.UUID;
  * @author <p>ADROITWOLF</p> 2021-05-06
  */
 public class CommonUtils {
-    private static final SnowFlake snowFlake = new SnowFlake(0, 0);
+    private static final SnowFlake SNOW_FLAKE = new SnowFlake(0, 0);
 
     /**
      * 功能描述: 流水生成自增id
@@ -20,7 +20,7 @@ public class CommonUtils {
      * @Date: 2019/11/29 16:18
      */
     public static long nextId() {
-        return snowFlake.nextId();
+        return SNOW_FLAKE.nextId();
     }
 
     /**
