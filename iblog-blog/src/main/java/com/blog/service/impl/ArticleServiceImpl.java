@@ -211,7 +211,7 @@ public class ArticleServiceImpl implements ArticleService {
              */
             if (null == blog1.getPictureId()) {
                 attachmentFeignService.changePictureStatus(picture_id, CiteNumEnum.ADD);
-            } else if (picture_id != blog1.getPictureId()) {
+            } else if (!picture_id.equals( blog1.getPictureId())) {
                 attachmentFeignService.changePictureStatus(picture_id, CiteNumEnum.ADD);
                 attachmentFeignService.changePictureStatus(blog1.getPictureId(), CiteNumEnum.REDUCE);
             }
