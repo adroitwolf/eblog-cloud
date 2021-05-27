@@ -2,6 +2,8 @@ package com.user.service;
 
 import com.common.entity.dto.UserDto;
 import com.common.entity.vo.BaseResponse;
+import com.common.entity.vo.PageInfo;
+import com.common.entity.vo.QueryParams;
 import com.user.entity.vo.UserDetail;
 import com.user.entity.vo.UserParams;
 import lombok.NonNull;
@@ -79,4 +81,11 @@ public interface UserService {
      * @Date: 2020/1/31 13:09
      */
     String getNicknameById(Long id);
+
+
+    /**
+     * 获取所有使用用户- 管理员和普通用户
+     * @return
+     */
+    BaseResponse getAllUserInfo(QueryParams queryParams, PageInfo pageInfo);
 }

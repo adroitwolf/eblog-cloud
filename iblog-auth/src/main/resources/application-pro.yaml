@@ -1,0 +1,50 @@
+server:
+  port: 5400
+spring:
+  redis:
+    database: 0
+    host: 81.70.169.127
+    port: 6379
+    password: 123
+  devtools:
+    restart:
+      enabled: true
+  application:
+    name: iblog-auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 81.70.169.127:8848
+        ip: 82.156.214.247
+    sentinel:
+      transport:
+        dashboard: 81.70.169.127:8858
+  datasource:
+    url: jdbc:mysql://82.156.214.247:3306/eblog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:/mybatis/*.xml
+# Feign对Sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
+
+jwt:
+  # 发行者
+  name: ADROITWOLF
+  # 密钥, 经过Base64加密,去等 可自行替换 默认development
+  base64Secret: ZGV2ZWxvcG1lbnQ
+  #jwt中过期时间设置(s)
+  jwtExpires: 1000
+  # refresh过期时间(day)
+  refreshExpires: 5

@@ -47,8 +47,6 @@ public class UserController {
 //    @ApiOperation("更改用户密码")
     @PutMapping("/changePassword")
     public BaseResponse updatePassword(@Valid @RequestBody PasswordParams passwordParams, HttpServletRequest request) {
-//        String token = userService.getUsernameByToken(request.getHeader("Authentication"));
-
         return accountService.updatePassword(passwordParams.getOldPassword(), passwordParams.getNewPassword(), request.getHeader("Authentication"));
     }
 
@@ -89,7 +87,5 @@ public class UserController {
     }
 
 
-//    @MethodLog
-//    @ApiOperation("更新用户资料")
 
 }

@@ -1,7 +1,9 @@
 package com.user.service;
 
 import com.common.entity.pojo.BloggerRole;
+import com.common.entity.vo.BaseResponse;
 import com.common.enums.RoleEnum;
+import com.user.entity.vo.RoleParams;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -74,5 +76,22 @@ public interface RoleService {
      */
     void deleteUserById(Long id);
 
+    /**
+     * 获取 管理员和普通用户
+     * @return
+     */
+    BaseResponse getRoles();
 
+
+    /**
+     * 更新用户角色状态
+     * @param roleParams
+     * @return
+     */
+    BaseResponse updateUserRoles(RoleParams roleParams);
+
+    /**
+     * 获取管理员和普通用户的用户id
+     */
+    List<Long> getUserIds();
 }

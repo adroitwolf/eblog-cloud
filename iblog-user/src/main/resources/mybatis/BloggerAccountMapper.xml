@@ -16,7 +16,9 @@
     <select id="selectByQueryParams" parameterType="com.common.entity.vo.QueryParams" resultMap="SelfResultMap">
         select
         b.id,a.ABOUT_ME, a.NICKNAME, b.IS_ENABLED, b.REGISTER_DATE, b.EMAIL,b.USERNAME
-        from e_user_profile as a,e_account as b
+        from e_user_profile as a
+        left join e_role_map as r on r.USER_ID = a.BLOGGER_ID
+        left join e_account as b on a.BLOGGER_ID = b.ID
         <where>
             <if test="query.keyword != '' and query.keyword != null">
                 <bind name="pattern" value="'%' + query.keyword + '%'"></bind>
@@ -25,7 +27,28 @@
             <if test="query.status != '' and query.status != null">
                 and b.IS_ENABLED = #{query.status}
             </if>
-            and a.BLOGGER_ID = b.ID
+            and r.ROLE_ID = '387055486085627904'
+        </where>
+        order by b.REGISTER_DATE desc
+    </select>
+
+
+    <select id="selectAllUsersByQueryParams" parameterType="com.common.entity.vo.QueryParams" resultMap="SelfResultMap">
+        select
+        DISTINCT
+        b.id,a.ABOUT_ME, a.NICKNAME, b.IS_ENABLED, b.REGISTER_DATE, b.EMAIL,b.USERNAME
+        from e_user_profile as a
+        left join e_role_map as r on r.USER_ID = a.BLOGGER_ID
+        left join e_account as b on a.BLOGGER_ID = b.ID
+        <where>
+            <if test="query.keyword != '' and query.keyword != null">
+                <bind name="pattern" value="'%' + query.keyword + '%'"></bind>
+                and a.NICKNAME like #{pattern}
+            </if>
+            <if test="query.status != '' and query.status != null">
+                and b.IS_ENABLED = #{query.status}
+            </if>
+            and r.ROLE_ID != '594704882355666944'
         </where>
         order by b.REGISTER_DATE desc
     </select>

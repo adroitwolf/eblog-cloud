@@ -16,4 +16,8 @@ public class BaseResponse {
     private Integer status;
     private String message;
     private Object data;
+
+    public static BaseResponse success(Object data){
+        return new BaseResponse(200,"请求成功",data);
+    }
 }

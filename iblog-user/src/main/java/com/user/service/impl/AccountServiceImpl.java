@@ -237,7 +237,7 @@ public class AccountServiceImpl implements AccountService {
 
         BloggerAccount bloggerAccounts = bloggerAccountDao.selectOneByExample(example);
 
-        if (Objects.isNull(bloggerAccounts)) {
+        if (!Objects.isNull(bloggerAccounts)) {
             mailContent.append("该邮箱已被注册");
             log.error("{}该邮箱已被注册",mail);
         } else {
@@ -264,7 +264,7 @@ public class AccountServiceImpl implements AccountService {
         Example example = Example.builder(BloggerAccount.class).andWhere(WeekendSqls.<BloggerAccount>custom().andEqualTo(BloggerAccount::getEmail, registerParams.getEmail())).build();
         BloggerAccount bloggerAccounts = bloggerAccountDao.selectOneByExample(example);
 
-        if (Objects.isNull(bloggerAccounts)) {
+        if (!Objects.isNull(bloggerAccounts)) {
             throw new BadRequestException("此邮箱已被注册");
         }
 
@@ -287,7 +287,6 @@ public class AccountServiceImpl implements AccountService {
         bloggerAccount.setId(CommonUtils.nextId());
         bloggerAccount.setUsername(registerParams.getAccount());
         bloggerAccount.setRegisterDate(new Date());
-//
         bloggerAccount.setIsEnabled(UserStatusEnum.YES.getName());
 
         log.debug(bloggerAccount.toString());
@@ -303,11 +302,8 @@ public class AccountServiceImpl implements AccountService {
 
         bloggerProfile.setNickname(registerParams.getUsername());
         bloggerProfile.setBloggerId(bloggerAccount.getId());
-//
         bloggerProfileDao.insertSelective(bloggerProfile);
         baseResponse.setStatus(HttpStatus.OK.value());
-//
-//
         //设置用户角色
         //默认都是User用户
 
@@ -315,7 +311,6 @@ public class AccountServiceImpl implements AccountService {
         roles.add(RoleEnum.USER);
 
         roleService.setRolesWithUserId(roles, bloggerAccount.getId());
-//
         return baseResponse;
     }
 
@@ -365,10 +360,15 @@ public class AccountServiceImpl implements AccountService {
         return new BaseResponse(HttpStatus.OK.value(), "账号状态更改成功", null);
     }
 
+    /**
+     * 管理员使用的接口，只能删除和管理用户角色
+     * @param bloggerId
+     * @param token
+     * @return
+     */
     @Override
     public BaseResponse deleteUser(Long bloggerId, String token) { //删除用户需要权限
         //todo 需要在用户验证 验证码之后的操作
-//       1.不能删除自己 2.同水平之间不能删除
 
         log.info(String.valueOf(bloggerId));
         Long id = tokenFeignService.getUserIdByToken(token);
@@ -377,20 +377,19 @@ public class AccountServiceImpl implements AccountService {
         if (bloggerId.equals(id)) {
             throw new UnAccessException("不允许删除自己");
         }
-//
-//        if(bloggerAccountMapper.deleteByPrimaryKey(bloggerId) ==0){ //说明没有此账号
-//            throw new BadRequestException(NOTFOUND);
-//        }
-//        bloggerProfileMapper.deleteByPrimaryKey(bloggerId); //删除个人配置文件
-//
-//
-//        roleService.deleteUserById(bloggerId);
+        BloggerAccount bloggerAccount = bloggerAccountDao.selectByPrimaryKey(bloggerId);
 
+        //说明没有此账号
+        if(Objects.isNull(bloggerAccount)){
+            throw new BadRequestException(NOTFOUND);
+        }
+        bloggerAccount.setIsEnabled(UserStatusEnum.NO.toString());
+        //删除个人配置文件
+        bloggerAccountDao.updateByPrimaryKeySelective(bloggerAccount);
 
+        roleService.deleteUserById(bloggerId);
         //todo:一些繁琐文件应该放到另一个不浪费时间的时候运行
 
-
-        //这里并没有删除该用户发布的所有文章
         return new BaseResponse(HttpStatus.OK.value(), "账删除成功", null);
     }
 
@@ -449,7 +448,6 @@ public class AccountServiceImpl implements AccountService {
 
         userRs.setRoles(roleService.getRolesByUserId(userRs.getId())
                 .stream().map(RoleEnum::getAuthority).collect(Collectors.toList()));
-
 
         return userRs;
     }

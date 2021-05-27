@@ -3,10 +3,15 @@ package com.user.service.impl;
 import com.api.feign.service.AttachmentFeignService;
 import com.api.feign.service.TokenFeignService;
 import com.common.entity.dto.UserDto;
+import com.common.entity.model.UserInfo;
 import com.common.entity.pojo.BloggerAccount;
 import com.common.entity.pojo.BloggerProfile;
 import com.common.entity.vo.BaseResponse;
+import com.common.entity.vo.DataGrid;
+import com.common.entity.vo.PageInfo;
+import com.common.entity.vo.QueryParams;
 import com.common.enums.RoleEnum;
+import com.github.pagehelper.PageHelper;
 import com.user.dao.BloggerAccountDao;
 import com.user.dao.BloggerProfileDao;
 import com.user.entity.vo.UserDetail;
@@ -22,12 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * <pre>UserServiceImpl</pre>
- *
+ * 用户服务
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 @Service
@@ -46,7 +52,7 @@ public class UserServiceImpl implements UserService {
     RoleService roleService;
 
     @Autowired
-TokenFeignService tokenFeignService;
+    TokenFeignService tokenFeignService;
 
 
     private final String TITLE = "用户头像";
@@ -174,5 +180,34 @@ TokenFeignService tokenFeignService;
             return "";
         }
         return profile.getNickname();
+    }
+
+    @Override
+    public BaseResponse getAllUserInfo(QueryParams queryParams, PageInfo pageInfo) {
+        PageHelper.startPage(pageInfo.getPageNum(),pageInfo.getPageSize());
+        List<UserInfo> infos = bloggerAccountDao.selectAllUsersByQueryParams(queryParams);
+        List<UserInfo> result = infos.stream().map(item->{
+            UserInfo userInfo = new UserInfo();
+
+            BeanUtils.copyProperties(item, userInfo);
+
+            if (Objects.nonNull(item.getAvatarId())) { //查询是否头像为空
+                userInfo.setAvatar(attachmentFeignService.getPathById(item.getAvatarId()));
+            }
+
+            //查询当前用户角色
+            userInfo.setRoles(roleService.getRolesByUserId(userInfo.getId()).stream().map(RoleEnum::getAuthority).collect(Collectors.toList()));
+            return userInfo;
+        }).collect(Collectors.toList());
+
+        DataGrid dataGrid = new DataGrid();
+
+        com.github.pagehelper.PageInfo<UserInfo> pageInfoObject = new com.github.pagehelper.PageInfo<>(infos);
+
+        dataGrid.setRows(result);
+
+        dataGrid.setTotal(pageInfoObject.getTotal());
+
+        return BaseResponse.success(dataGrid);
     }
 }
