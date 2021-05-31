@@ -1,8 +1,10 @@
 package com.blog.controller.manager;
 
+import com.auth.annotation.Role;
 import com.blog.service.CommentService;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
+import com.common.enums.RoleEnum;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/manage/comment")
+@Role(require = {RoleEnum.USER})
 public class CommentManageController {
     @Autowired
     CommentService commentService;
 
     private static final String TOKEN = "Authentication";
-
-
     @ApiOperation("管理评论列表")
     @GetMapping("/list")
     public BaseResponse getList(PageInfo pageInfo, HttpServletRequest request) {

@@ -1,8 +1,10 @@
 package com.user.controller.manager;
 
+import com.auth.annotation.Role;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import com.common.entity.vo.QueryParams;
+import com.common.enums.RoleEnum;
 import com.user.entity.vo.RoleParams;
 import com.user.service.RoleService;
 import com.user.service.UserService;
@@ -13,11 +15,12 @@ import javax.validation.Valid;
 
 /**
  * <pre>AdminManageController</pre>
- * 管理角色的控制器
+ * 超级管理员管理用户接口
  * @author <p>ADROITWOLF</p> 2021-05-26
  */
 @RestController
 @RequestMapping("/manage/role")
+@Role(require = {RoleEnum.LORD})
 public class AdminManageController {
     @Autowired
     RoleService roleService;

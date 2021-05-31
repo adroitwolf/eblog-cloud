@@ -3,8 +3,10 @@ package com.attach.controller.manage;
 import com.attach.entity.vo.AttachmentParams;
 import com.attach.entity.vo.AttachmentQueryParams;
 import com.attach.service.AttachmentService;
+import com.auth.annotation.Role;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
+import com.common.enums.RoleEnum;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/manage/attachment")
+@Role(require = {RoleEnum.USER})
 public class AttachmentManageController {
     @Autowired
     AttachmentService attachmentService;
