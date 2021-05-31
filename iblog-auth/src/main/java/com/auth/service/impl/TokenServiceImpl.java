@@ -3,17 +3,13 @@ package com.auth.service.impl;
 import com.auth.props.JWTProperties;
 import com.auth.service.JwtService;
 import com.auth.service.RedisService;
-import com.auth.service.RoleService;
 import com.auth.service.TokenService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.common.entity.model.User;
 import com.common.entity.vo.AutoToken;
 import com.common.enums.RoleEnum;
-import com.common.exception.ServiceException;
-import com.common.exception.UnAccessException;
 import com.common.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,11 +26,8 @@ import java.util.concurrent.TimeUnit;
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 @Slf4j
-@Service
+@Service(value = "TokenService")
 public class TokenServiceImpl implements TokenService {
-
-    @Autowired
-    RoleService roleService;
 
     @Autowired
     RedisService redisService;
@@ -77,16 +69,6 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Long getUserIdByRefreshToken(String token) {
         return redisService.getUserIdByRefreshToken(token);
-    }
-
-    @Override
-    public boolean authentication(Long id, String token) {
-        if (roleService.getRolesByUserId(getUserIdWithToken(token)).contains(RoleEnum.ADMIN)) {
-            return true;
-        } else if (null == id || !id.equals(getUserIdWithToken(token))) {
-            return false;
-        }
-        return true;
     }
 
     //    利用Jwt生成token
@@ -131,7 +113,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Long getUserIdWithToken(String token) {
+    public Long getUserIdByToken(String token) {
 
         return JWT.decode(token).getClaim("userId").asLong();
 

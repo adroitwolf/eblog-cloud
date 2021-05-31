@@ -34,7 +34,10 @@
         <hutool.version>4.6.1</hutool.version>
         <thumbnailator.version>0.4.8</thumbnailator.version>
         <jwt.version>3.8.1</jwt.version>
+        <fastJson.version>1.2.58</fastJson.version>
+        <common-io.version>2.6</common-io.version>
         <feign-httpclient.version>11.2</feign-httpclient.version>
+        <swagger.version>2.6.1</swagger.version>
     </properties>
 
 
@@ -117,6 +120,34 @@
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
             </dependency>
+
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastJson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${common-io.version}</version>
+            </dependency>
+
+
+            <!--swagger2-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

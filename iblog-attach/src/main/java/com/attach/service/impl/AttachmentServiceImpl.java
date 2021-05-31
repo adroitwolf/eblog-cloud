@@ -1,10 +1,10 @@
 package com.attach.service.impl;
 
-import com.api.feign.service.TokenFeignService;
 import com.attach.dao.BloggerPictureDao;
 import com.attach.entity.vo.AttachmentParams;
 import com.attach.entity.vo.AttachmentQueryParams;
 import com.attach.service.AttachmentService;
+import com.auth.service.TokenService;
 import com.common.entity.model.ImageFile;
 import com.common.entity.model.Picture;
 import com.common.entity.model.PictureInfo;
@@ -59,7 +59,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 
     @Autowired
-    TokenFeignService tokenFeignService;
+    TokenService tokenService;
 
 
     @Override
@@ -84,7 +84,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public BaseResponse getAttachmentList(com.common.entity.vo.PageInfo pageInfo, AttachmentQueryParams attachmentQueryParams, String token) {
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 
@@ -119,7 +119,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional
     public BaseResponse uploadAttachment(MultipartFile file, String token) {
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         if(uploadFile(file, userId, null).equals(-1L)){
             throw new BadRequestException("附件上传失败");
@@ -203,7 +203,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional
     public BaseResponse updateInfo(Long id, AttachmentParams attachmentParams,String token) {
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         BloggerPicture bloggerPicture = bloggerPictureDao.selectByPrimaryKey(id);
 
@@ -270,7 +270,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public BaseResponse findAllMediaType(String token) {
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         return new BaseResponse(HttpStatus.OK.value(), null, bloggerPictureDao.findAllMediaType(userId));
     }

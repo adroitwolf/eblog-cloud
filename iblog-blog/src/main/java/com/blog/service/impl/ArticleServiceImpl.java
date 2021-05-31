@@ -2,8 +2,8 @@ package com.blog.service.impl;
 
 import com.api.feign.service.AttachmentFeignService;
 import com.api.feign.service.RoleFeignService;
-import com.api.feign.service.TokenFeignService;
 import com.api.feign.service.UserFeignService;
+import com.auth.service.TokenService;
 import com.blog.dao.BlogContentDao;
 import com.blog.dao.BlogDao;
 import com.blog.dao.BlogLabelDao;
@@ -81,7 +81,7 @@ public class ArticleServiceImpl implements ArticleService {
     //    @Autowired
 //    UserService userService;
     @Autowired
-    TokenFeignService tokenFeignService;
+    TokenService tokenService;
 
     @Autowired
     RoleFeignService roleFeignService;
@@ -106,7 +106,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Long bloggerId;
 //        if((bloggerId =userService.getUserIdByToken(token)) == -1){
-        if ((bloggerId = tokenFeignService.getUserIdByToken(token)) == -1) {
+        if ((bloggerId = tokenService.getUserIdByToken(token)) == -1) {
             throw new BadRequestException("用户信息错误！");
         }
         blog.setBloggerId(bloggerId);
@@ -180,9 +180,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Blog blog1 = blogDao.selectByPrimaryKey(blogId);
 
-        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
-            throw new UnAccessException("不能执行此操作");
-        }
+
 
 
         /**
@@ -225,7 +223,7 @@ public class ArticleServiceImpl implements ArticleService {
         blog.setId(blogId);
         blog.setNearestModifyDate(new Date());
         BeanUtils.copyProperties(articleParams, blog);
-        String status = tokenFeignService.getRoles(token).contains(RoleEnum.ADMIN) ? ArticleStatusEnum.PUBLISHED.getName() : ArticleStatusEnum.CHECK.getName();
+        String status = tokenService.getRoles(token).contains(RoleEnum.ADMIN) ? ArticleStatusEnum.PUBLISHED.getName() : ArticleStatusEnum.CHECK.getName();
         blog.setStatus(status);
         //todo tag问题
         blog.setTagTitle(nowTagsString);
@@ -265,15 +263,12 @@ public class ArticleServiceImpl implements ArticleService {
             throw new UnAccessException("请不要尝试非法操作");
         }
 
-        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
-            throw new UnAccessException("不能执行此操作");
-        }
         Blog blog = new Blog();
         //检测是否有非法字符注入
 //        String articleStatus =ArticleStatusEnum.valueOf(status).equals(ArticleStatusEnum.PUBLISHED) ?
 //                (tokenService.getRoles(token).contains(RoleEnum.ADMIN)?ArticleStatusEnum.PUBLISHED.getName():ArticleStatusEnum.CHECK.getName()):ArticleStatusEnum.RECYCLE.getName();
         StringBuilder articleStatus = new StringBuilder();
-        if (tokenFeignService.getRoles(token).contains(RoleEnum.ADMIN)) {
+        if (tokenService.getRoles(token).contains(RoleEnum.ADMIN)) {
             articleStatus.append(ArticleStatusEnum.valueOf(status));
         }
 
@@ -310,9 +305,6 @@ public class ArticleServiceImpl implements ArticleService {
         Blog blog = blogDao.selectByPrimaryKey(blogId);
         if (Objects.isNull(blog)) { //查询没有相关博客
             throw new NotFoundException("没有相关博客信息");
-        }
-        if(!tokenFeignService.authentication(blog.getBloggerId(), token)){
-            throw new UnAccessException("不能执行此操作");
         }
 
         BlogContent blogContent = blogContentDao.selectByPrimaryKey(blogId);
@@ -352,7 +344,7 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("查询目标" + postQueryParams.toString());
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
-        List<Blog> blogList = blogDao.selectByUserExample(postQueryParams, tokenFeignService.getUserIdByToken(token));
+        List<Blog> blogList = blogDao.selectByUserExample(postQueryParams, tokenService.getUserIdByToken(token));
 
         PageInfo<Blog> list = new PageInfo<>(blogList);
 
@@ -477,9 +469,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         Blog blog1 = blogDao.selectByPrimaryKey(blogId);
 
-        if(!tokenFeignService.authentication(blog1.getBloggerId(), token)){
-            throw new UnAccessException("你没有权限操作");
-        }
 
         /**
          * 功能描述:这里应该先查询此文章的所有标签，然后删除，顺序不可以变
@@ -505,7 +494,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        Integer bloggerId = userService.getUserIdByToken(token);
         BaseResponse baseResponse = new BaseResponse();
 
-        Long bloggerId = tokenFeignService.getUserIdByToken(token);
+        Long bloggerId = tokenService.getUserIdByToken(token);
 
         Example example = Example.builder(Blog.class).andWhere(WeekendSqls.<Blog>custom().andEqualTo(Blog::getBloggerId, bloggerId)).build();
         // 自动装箱

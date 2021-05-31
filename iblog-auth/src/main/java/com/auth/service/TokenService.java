@@ -38,16 +38,6 @@ public interface TokenService {
 
 
     /**
-     * 功能描述: 用来认证用户id和当前操作对象的作者id的权限一致性
-     *
-     * @Param: [id, token]
-     * @Return: void
-     * @Author: WHOAMI
-     * @Date: 2020/1/30 17:55
-     */
-    boolean authentication(Long id, String token);
-
-    /**
      * 功能描述: 生成token
      *
      * @Param: [user]
@@ -106,5 +96,5 @@ public interface TokenService {
      * @Author: WHOAMI
      * @Date: 2020/1/30 17:58
      */
-    Long getUserIdWithToken(String token);
+    Long getUserIdByToken(String token);
 }

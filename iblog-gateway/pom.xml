@@ -34,10 +34,15 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adroitwolf</groupId>
+            <artifactId>iblog-auth</artifactId>
+            <version>${iblog.version}</version>
         </dependency>
     </dependencies>
 

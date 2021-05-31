@@ -72,6 +72,11 @@
             <artifactId>iblog-service-api</artifactId>
             <version>${iblog.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.adroitwolf</groupId>
+            <artifactId>iblog-auth</artifactId>
+            <version>${iblog.version}</version>
+        </dependency>
 
     </dependencies>
 

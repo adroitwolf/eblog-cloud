@@ -1,4 +1,4 @@
-package com.user.utils;
+package com.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.entity.pojo.BloggerRole;
@@ -6,9 +6,9 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ public class DataUtils {
     @PostConstruct
     public Map<String,Long> loadRoleJson(){
         try {
-            String json = IOUtils.toString(roles.getInputStream());
+            String json = IOUtils.toString(roles.getInputStream(), Charset.forName("UTF-8"));
             Map<String,Long> result = new HashMap<>();
             JSONObject temp = JSONObject.parseObject(json);
             String roles = temp.getJSONArray("roles").toString();

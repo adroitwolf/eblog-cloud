@@ -50,4 +50,9 @@ public class AdminManageController {
     public BaseResponse updateRoles(@RequestBody  RoleParams roleParams){
         return roleService.updateUserRoles(roleParams);
     }
+
+//    @PutMapping("/updateUserSatus")
+//    public BaseResponse updateStatus(){
+//
+//    }
 }

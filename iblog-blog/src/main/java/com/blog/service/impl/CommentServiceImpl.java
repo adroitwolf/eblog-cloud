@@ -1,7 +1,7 @@
 package com.blog.service.impl;
 
-import com.api.feign.service.TokenFeignService;
 import com.api.feign.service.UserFeignService;
+import com.auth.service.TokenService;
 import com.blog.dao.CommentDao;
 import com.blog.entity.model.MComment;
 import com.blog.entity.vo.Comment;
@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
     ArticleService articleService;
 
     @Autowired
-    TokenFeignService tokenFeignService;
+    TokenService tokenService;
 
     @Autowired
     UserFeignService userFeignService;
@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
         BeanUtils.copyProperties(commentParams, comments);
 
         comments.setType(CommentTypeEnum.valueOf(commentParams.getType()).getValue());
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         // 这里来判断一下是否为作者
         // 这里应该确定文章是否存在
@@ -141,7 +141,7 @@ public class CommentServiceImpl implements CommentService {
          */
         BaseResponse baseResponse = new BaseResponse();
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         //排序规则
         Example example ;
@@ -221,7 +221,6 @@ public class CommentServiceImpl implements CommentService {
         if (null == comments) {
             throw new BadRequestException("请不要进行注入操作");
         }
-        tokenFeignService.authentication(comments.getAuthorId(), token);
 
         comments.setIsDel((byte) 1);
 

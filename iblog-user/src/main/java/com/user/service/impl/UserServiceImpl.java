@@ -1,7 +1,7 @@
 package com.user.service.impl;
 
 import com.api.feign.service.AttachmentFeignService;
-import com.api.feign.service.TokenFeignService;
+import com.auth.service.TokenService;
 import com.common.entity.dto.UserDto;
 import com.common.entity.model.UserInfo;
 import com.common.entity.pojo.BloggerAccount;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     RoleService roleService;
 
     @Autowired
-    TokenFeignService tokenFeignService;
+    TokenService tokenService;
 
 
     private final String TITLE = "用户头像";
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
         BaseResponse baseResponse = new BaseResponse();
 
-        Long userId = tokenFeignService.getUserIdByToken(token);
+        Long userId = tokenService.getUserIdByToken(token);
 
         BloggerProfile bloggerProfile = new BloggerProfile();
 
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse getUserDetailByToken(@NonNull String token) {
-        Long id = tokenFeignService.getUserIdByToken(token);
+        Long id = tokenService.getUserIdByToken(token);
 
         return new BaseResponse(HttpStatus.OK.value(), "", findUserDetailByBloggerId(id));
 
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public BaseResponse updateAvatar(@NonNull MultipartFile avatar, @NonNull String token) {
-        Long id = tokenFeignService.getUserIdByToken(token);
+        Long id = tokenService.getUserIdByToken(token);
 
 //        删除原有附件
 
