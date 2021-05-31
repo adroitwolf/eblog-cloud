@@ -22,6 +22,12 @@
             <groupId>com.adroitwolf</groupId>
             <artifactId>iblog-common</artifactId>
             <version>${iblog.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 

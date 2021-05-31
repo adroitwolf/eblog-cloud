@@ -12,7 +12,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 @EnableIBFeignClients
-@MapperScan(basePackages = {"com.attach.dao"})
+@MapperScan(basePackages = {"com.attach.dao","com.auth"})
 @SpringBootApplication
 @EnableDiscoveryClient
 public class AttachStartApplication {

@@ -28,7 +28,7 @@
         <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
         <spring.cloud.alibaba.version>2.2.1.RELEASE</spring.cloud.alibaba.version>
         <spring.cloud.version>Hoxton.SR3</spring.cloud.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <tk.mybatis.version>2.1.5</tk.mybatis.version>
         <pageHelper.version>1.2.12</pageHelper.version>
         <hutool.version>4.6.1</hutool.version>
@@ -150,14 +150,5 @@
 
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

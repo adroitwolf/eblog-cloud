@@ -4,6 +4,7 @@ import com.blog.entity.vo.CommentParams;
 import com.blog.service.CommentService;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class CommentController {
     CommentService commentService;
 
     @PostMapping("/comments")
-//    @ApiOperation("发布评论")
+    @ApiOperation("发布评论")
     public BaseResponse comment(@RequestBody @Valid CommentParams commentParams, HttpServletRequest httpServletRequest) {
         log.info(commentParams.toString());
         return commentService.comment(commentParams, httpServletRequest.getHeader(TOKEN));
@@ -35,12 +36,11 @@ public class CommentController {
 
 
     @GetMapping("/{id:\\d+}/comments")
-//    @ApiOperation("获取评论")
+    @ApiOperation("获取评论")
     public BaseResponse getList(@PathVariable("id") Long id,
                                 @RequestParam String type,
                                 PageInfo pageInfo) {
         log.info(pageInfo.toString());
         return commentService.getList(id, type, pageInfo);
-
     }
 }

@@ -5,6 +5,7 @@ import com.attach.entity.vo.AttachmentQueryParams;
 import com.attach.service.AttachmentService;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class AttachmentManageController {
     private static final String TOKEN = "Authentication";
 
     @GetMapping("list")
-//    @ApiOperation("获取所有附件")
+    @ApiOperation("获取所有附件")
     public BaseResponse getAttachmentList(PageInfo pageInfo,
                                           AttachmentQueryParams attachmentQueryParams,
                                           HttpServletRequest request) {
@@ -38,35 +39,35 @@ public class AttachmentManageController {
 
 
     @PostMapping(value = "upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @ApiOperation("上传图片")
+    @ApiOperation("上传图片")
     public BaseResponse uploadFile(MultipartFile file, HttpServletRequest request) {
         return attachmentService.uploadAttachment(file, request.getHeader(TOKEN));
     }
 
 
     @GetMapping("{picId:\\d+}/info")
-//    @ApiOperation("获取图片的详细信息")
+    @ApiOperation("获取图片的详细信息")
     public BaseResponse getInfo(@PathVariable("picId") Long picId, HttpServletRequest request) {
         return attachmentService.getInfo(picId, request.getHeader(TOKEN));
     }
 
 
     @PutMapping("{picId:\\d+}/info")
-//    @ApiOperation("更新图片信息")
+    @ApiOperation("更新图片信息")
     public BaseResponse updateInfo(@PathVariable("picId") Long picId, @Valid @RequestBody AttachmentParams attachmentParams, HttpServletRequest request) {
         return attachmentService.updateInfo(picId, attachmentParams, request.getHeader(TOKEN));
     }
 
 
     @DeleteMapping("{picId:\\d+}")
-//    @ApiOperation("删除图片")
+    @ApiOperation("删除图片")
     public BaseResponse deleteAttachment(@PathVariable("picId") Long picId, HttpServletRequest request) {
         return attachmentService.deleteAttachment(picId, request.getHeader(TOKEN));
     }
 
 
     @GetMapping("/list_media")
-//    @ApiOperation("列出所有媒体类型")
+    @ApiOperation("列出所有媒体类型")
     public BaseResponse findAllMediaType(HttpServletRequest request) {
         return attachmentService.findAllMediaType(request.getHeader(TOKEN));
     }

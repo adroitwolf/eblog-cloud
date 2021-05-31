@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  *
  * @author <p>ADROITWOLF</p> 2021-05-06
  */
-@MapperScan(basePackages = {"com.blog.dao"})
+@MapperScan(basePackages = {"com.blog.dao","com.auth"})
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableIBFeignClients

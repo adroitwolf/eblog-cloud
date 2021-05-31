@@ -6,6 +6,7 @@ import com.common.entity.vo.QueryParams;
 import com.user.entity.vo.UserParams;
 import com.user.service.AccountService;
 import com.user.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class UserManageController {
     private static final String TOKEN = "Authentication";
 
     @PutMapping("/userUpdate/{bloggerId:\\d+}/{status}")
-//    @ApiOperation("管理帐户状态")
+    @ApiOperation("管理帐户状态")
     public BaseResponse updateUserStatus(@PathVariable("bloggerId") Long bloggerId,
                                          @PathVariable("status") String status, HttpServletRequest request) {
         return accountService.updateUserStatus(bloggerId, status, request.getHeader(TOKEN));
@@ -42,14 +43,14 @@ public class UserManageController {
 
 
     @DeleteMapping("/delete/{bloggerId:\\d+}")
-//    @ApiOperation("删除用户")
+    @ApiOperation("删除用户")
     public BaseResponse deleteUser(@PathVariable("bloggerId") Long bloggerId, HttpServletRequest request) {
         return accountService.deleteUser(bloggerId, request.getHeader(TOKEN));
     }
 
 
     @GetMapping("/query")
-//    @ApiOperation("查询用户状态")
+    @ApiOperation("查询用户状态")
     public BaseResponse queryUserByExample(
             @Valid PageInfo pageInfo,
             QueryParams queryParams) {
@@ -64,7 +65,7 @@ public class UserManageController {
     }
 
 
-    //    @ApiOperation("上传用户图片")
+        @ApiOperation("上传用户图片")
     @PostMapping("/updateAvatar")
     public BaseResponse updateProfile(@RequestParam(value = "avatar", required = true) MultipartFile avatar,
                                       HttpServletRequest request) {

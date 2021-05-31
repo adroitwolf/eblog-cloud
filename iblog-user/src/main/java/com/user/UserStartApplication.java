@@ -14,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableIBFeignClients
-@MapperScan(basePackages={"com.user.dao"})
+@MapperScan(basePackages={"com.user.dao","com.auth"})
 public class UserStartApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserStartApplication.class);
