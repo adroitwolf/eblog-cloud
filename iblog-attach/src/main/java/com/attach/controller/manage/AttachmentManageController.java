@@ -25,7 +25,6 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/manage/attachment")
-@Role(require = {RoleEnum.USER})
 public class AttachmentManageController {
     @Autowired
     AttachmentService attachmentService;
@@ -34,6 +33,7 @@ public class AttachmentManageController {
 
     @GetMapping("list")
     @ApiOperation("获取所有附件")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse getAttachmentList(PageInfo pageInfo,
                                           AttachmentQueryParams attachmentQueryParams,
                                           HttpServletRequest request) {
@@ -43,6 +43,7 @@ public class AttachmentManageController {
 
     @PostMapping(value = "upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("上传图片")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse uploadFile(MultipartFile file, HttpServletRequest request) {
         return attachmentService.uploadAttachment(file, request.getHeader(TOKEN));
     }
@@ -50,6 +51,7 @@ public class AttachmentManageController {
 
     @GetMapping("{picId:\\d+}/info")
     @ApiOperation("获取图片的详细信息")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse getInfo(@PathVariable("picId") Long picId, HttpServletRequest request) {
         return attachmentService.getInfo(picId, request.getHeader(TOKEN));
     }
@@ -57,6 +59,7 @@ public class AttachmentManageController {
 
     @PutMapping("{picId:\\d+}/info")
     @ApiOperation("更新图片信息")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse updateInfo(@PathVariable("picId") Long picId, @Valid @RequestBody AttachmentParams attachmentParams, HttpServletRequest request) {
         return attachmentService.updateInfo(picId, attachmentParams, request.getHeader(TOKEN));
     }
@@ -64,6 +67,7 @@ public class AttachmentManageController {
 
     @DeleteMapping("{picId:\\d+}")
     @ApiOperation("删除图片")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse deleteAttachment(@PathVariable("picId") Long picId, HttpServletRequest request) {
         return attachmentService.deleteAttachment(picId, request.getHeader(TOKEN));
     }
@@ -71,6 +75,7 @@ public class AttachmentManageController {
 
     @GetMapping("/list_media")
     @ApiOperation("列出所有媒体类型")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse findAllMediaType(HttpServletRequest request) {
         return attachmentService.findAllMediaType(request.getHeader(TOKEN));
     }

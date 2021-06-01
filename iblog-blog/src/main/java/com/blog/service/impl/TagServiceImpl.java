@@ -65,7 +65,10 @@ public class TagServiceImpl implements TagService {
             }
         });
         // 批量更新关联表
-        blogLabelMapDao.insertList(maps);
+        if(maps.size()>0){
+
+            blogLabelMapDao.insertList(maps);
+        }
 
         return StringUtils.join(nowTags, ",");
 
@@ -106,7 +109,7 @@ public class TagServiceImpl implements TagService {
                     log.info("需要更新的标签名称:{}", value);
 
 
-                    Example.Builder blogLabelExample = Example.builder(BlogLabel.class).andWhere(WeekendSqls.<BlogLabel>custom().andEqualTo(BlogLabel::getTitle, value));
+                    Example blogLabelExample = Example.builder(BlogLabel.class).andWhere(WeekendSqls.<BlogLabel>custom().andEqualTo(BlogLabel::getTitle, value)).build();
 
 
                     BlogLabel label = blogLabelDao.selectOneByExample(blogLabelExample);

@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     ArticleService articleService;
 
-    @Autowired
+    @Resource(name = "authTokenService")
     TokenService tokenService;
 
     @Autowired
