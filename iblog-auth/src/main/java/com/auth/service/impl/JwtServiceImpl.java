@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
-@Service
+@Service("authJwtService")
 @Slf4j
 public class JwtServiceImpl implements JwtService {
     @Autowired

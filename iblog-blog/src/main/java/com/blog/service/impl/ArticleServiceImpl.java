@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
+import javax.annotation.Resource;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,13 +75,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     AttachmentFeignService attachmentFeignService;
 
-    /*代码修改结束*/
     @Autowired
     BlogDao blogDao;
 
-    //    @Autowired
-//    UserService userService;
-    @Autowired
+    @Resource(name = "authTokenService")
     TokenService tokenService;
 
     @Autowired

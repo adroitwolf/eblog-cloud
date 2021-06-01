@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     private static final Integer DEFAULT_NUM = 0;
 
 
-    @Autowired
+    @Resource(name = "authTokenService")
     TokenService tokenService;
 
 

@@ -20,7 +20,7 @@ spring:
     nacos:
       discovery:
         server-addr: 81.70.169.127:8848
-        ip: 82.156.214.247
+#        ip: 82.156.214.247
     sentinel:
       transport:
         dashboard: 81.70.169.127:8858

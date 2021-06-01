@@ -12,6 +12,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -23,7 +24,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <pre>AuthFilter</pre>
@@ -45,6 +45,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
     public AuthFilter() {
         this.whiteList.add("/**/api/**");
+        this.whiteList.add("/iblog-attach/images/**");
     }
 
     @Override
@@ -57,6 +58,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         String token = request.getHeaders().getFirst(TOKEN);
         ServerHttpResponse response = exchange.getResponse();
+        // 是否是跨域请求
+        HttpMethod method = request.getMethod();
+
+        if(method.equals(HttpMethod.OPTIONS)){
+            return chain.filter(exchange);
+        }
 
         //是否属于白名单
         if(shouldNotFilter(path)){
@@ -69,7 +76,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
             BaseResponse result = BaseResponse.builder().status(HttpStatus.UNAUTHORIZED.value()).message("用户未登录，请先登录！").build();
             return responseResult(response,result);
         }
-        log.info("" + Objects.isNull(token));
         if(!tokenService.verifierToken(token)){
             BaseResponse result = BaseResponse.builder().status(HttpStatus.UNAUTHORIZED.value()).message("用户Token无效").build();
             return responseResult(response,result);
