@@ -1,6 +1,7 @@
 package com.blog.service;
 
-import com.blog.entity.model.PopularBlog;
+import com.blog.entity.model.ClickStatus;
+import com.common.entity.model.PopularBlog;
 import com.common.entity.pojo.BlogStatus;
 
 import java.util.List;
@@ -22,6 +23,17 @@ public interface RedisService {
      * @Date: 2020/1/30 19:52
      */
     Set<PopularBlog> listTop5FrmRedis();
+
+
+    /**
+     * 功能描述: 增加用户点击量
+     *
+     * @Param: [clickStatus]
+     * @Return: void
+     * @Author: WHOAMI
+     * @Date: 2020/1/30 19:46
+     */
+    void incrementBlogClickedCount(ClickStatus clickStatus);
 
     /**
      * 功能描述: 删除redis键值对

@@ -1,9 +1,7 @@
 package com.api.feign.service;
 
-import com.api.feign.service.factory.RoleFeignServiceFallBackFactory;
 import com.common.enums.RoleEnum;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 

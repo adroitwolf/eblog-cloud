@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
 @Slf4j
-@Service(value = "TokenService")
+@Service("authTokenService")
 public class TokenServiceImpl implements TokenService {
 
     @Autowired
@@ -71,7 +71,11 @@ public class TokenServiceImpl implements TokenService {
         return redisService.getUserIdByRefreshToken(token);
     }
 
-    //    利用Jwt生成token
+    /**
+     * 利用Jwt生成token
+     * @param user
+     * @return
+     */
     @Override
     public String generateToken(User user) {
         return jwtService.generateToken(user);

@@ -1,4 +1,4 @@
-package com.blog.entity.model;
+package com.common.entity.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

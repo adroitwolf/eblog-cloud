@@ -38,12 +38,10 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private BloggerRoleMapDao bloggerRoleMapDao;
 
-    @Autowired
-    DataUtils dataUtils;
-
     private Map<String,Long> roles;
 
-    public RoleServiceImpl() {
+
+    public RoleServiceImpl(@Autowired DataUtils dataUtils) {
         roles = dataUtils.loadRoleJson();
     }
 

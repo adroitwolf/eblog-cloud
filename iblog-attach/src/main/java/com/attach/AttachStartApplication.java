@@ -4,6 +4,7 @@ import com.api.annotation.EnableIBFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -13,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @EnableIBFeignClients
 @MapperScan(basePackages = {"com.attach.dao","com.auth"})
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages ={"com.attach","com.auth"} )
 @EnableDiscoveryClient
 public class AttachStartApplication {
     public static void main(String[] args) {

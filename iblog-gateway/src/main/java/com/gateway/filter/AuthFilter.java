@@ -23,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <pre>AuthFilter</pre>
@@ -64,16 +65,17 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
 
         if(StringUtils.isEmpty(token)){
+            log.info("用户没有登录");
             BaseResponse result = BaseResponse.builder().status(HttpStatus.UNAUTHORIZED.value()).message("用户未登录，请先登录！").build();
             return responseResult(response,result);
         }
-
+        log.info("" + Objects.isNull(token));
         if(!tokenService.verifierToken(token)){
             BaseResponse result = BaseResponse.builder().status(HttpStatus.UNAUTHORIZED.value()).message("用户Token无效").build();
             return responseResult(response,result);
         }
 
-        if(!tokenService.isExpire(token)){
+        if(tokenService.isExpire(token)){
             BaseResponse result = BaseResponse.builder().status(HttpStatus.UNAUTHORIZED.value()).message("用户Token已经过期").build();
             return responseResult(response,result);
         }

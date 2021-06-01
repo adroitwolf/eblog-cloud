@@ -4,6 +4,8 @@ import com.blog.entity.vo.CommentParams;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * <pre>CommentService</pre>
  *  评论服务
@@ -39,7 +41,7 @@ public interface CommentService {
      * @Author: WHOAMI
      * @Date: 2020/2/8 11:26
      */
-    BaseResponse getListByToken(PageInfo pageInfo, String token);
+    BaseResponse getListByToken(PageInfo pageInfo, @NotNull String token);
 
 
     /**

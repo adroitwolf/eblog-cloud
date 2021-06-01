@@ -1,6 +1,6 @@
 package com.blog.controller.manager;
 
-import com.auth.annotation.Role;
+import com.auth.aop.annotation.Role;
 import com.blog.entity.vo.ArticleParams;
 import com.blog.service.ArticleService;
 import com.blog.service.BlogService;

@@ -4,7 +4,7 @@ import com.api.feign.service.AttachmentFeignService;
 import com.api.feign.service.UserFeignService;
 import com.blog.dao.BlogContentDao;
 import com.blog.dao.BlogDao;
-import com.blog.entity.model.PopularBlog;
+import com.common.entity.model.PopularBlog;
 import com.blog.entity.vo.BlogDetailWithAuthor;
 import com.common.entity.vo.QueryParams;
 import com.blog.service.BlogService;

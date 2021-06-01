@@ -18,6 +18,7 @@ import com.common.entity.vo.PageInfo;
 import com.common.enums.CommentTypeEnum;
 import com.common.exception.BadRequestException;
 import com.common.exception.NotFoundException;
+import com.common.exception.UnAccessException;
 import com.common.utils.CommonUtils;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -131,7 +133,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public BaseResponse getListByToken(PageInfo pageInfo, String token) {
+    public BaseResponse getListByToken(PageInfo pageInfo,@NotNull String token) {
 
         /**
          * 功能描述: 注意这里其实是可以看到那些删除评论相关的子评论的  具体结构是本体评论并且带上父评论 和哔哩哔哩的评论机制差不多
@@ -140,6 +142,10 @@ public class CommentServiceImpl implements CommentService {
          * @Date: 2020/2/17 12:16
          */
         BaseResponse baseResponse = new BaseResponse();
+
+        if(StringUtils.isEmpty(token)){
+            throw new UnAccessException("用户未登录");
+        }
 
         Long userId = tokenService.getUserIdByToken(token);
 

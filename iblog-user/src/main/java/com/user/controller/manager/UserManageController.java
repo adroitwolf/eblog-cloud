@@ -1,6 +1,6 @@
 package com.user.controller.manager;
 
-import com.auth.annotation.Role;
+import com.auth.aop.annotation.Role;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import com.common.entity.vo.QueryParams;

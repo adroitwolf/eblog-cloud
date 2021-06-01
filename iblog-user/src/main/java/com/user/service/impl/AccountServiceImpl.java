@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -60,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     RoleService roleService;
 
-    @Autowired
+    @Resource(name = "authTokenService")
     TokenService tokenService;
 
 

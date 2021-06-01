@@ -1,4 +1,4 @@
-package com.auth.annotation;
+package com.auth.aop.annotation;
 
 import com.common.enums.RoleEnum;
 

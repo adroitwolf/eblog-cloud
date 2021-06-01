@@ -3,7 +3,7 @@ package com.attach.controller.manage;
 import com.attach.entity.vo.AttachmentParams;
 import com.attach.entity.vo.AttachmentQueryParams;
 import com.attach.service.AttachmentService;
-import com.auth.annotation.Role;
+import com.auth.aop.annotation.Role;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import com.common.enums.RoleEnum;

@@ -1,0 +1,9 @@
+jwt:
+  # 发行者
+  name: ADROITWOLF
+  # 密钥, 经过Base64加密,去等 可自行替换 默认development
+  base64Secret: ZGV2ZWxvcG1lbnQ
+  #jwt中过期时间设置(s)
+  jwtExpires: 7200
+  # refresh过期时间(day)
+  refreshExpires: 5

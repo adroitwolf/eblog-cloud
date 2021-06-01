@@ -1,6 +1,6 @@
 package com.blog.controller.manager;
 
-import com.auth.annotation.Role;
+import com.auth.aop.annotation.Role;
 import com.blog.service.CommentService;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
@@ -20,14 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/manage/comment")
-@Role(require = {RoleEnum.USER})
 public class CommentManageController {
+
     @Autowired
     CommentService commentService;
 
     private static final String TOKEN = "Authentication";
+
     @ApiOperation("管理评论列表")
     @GetMapping("/list")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse getList(PageInfo pageInfo, HttpServletRequest request) {
         return commentService.getListByToken(pageInfo, request.getHeader(TOKEN));
     }
@@ -36,6 +38,7 @@ public class CommentManageController {
 
     @DeleteMapping("{commentId:\\d+}/del")
     @ApiOperation("删除评论")
+    @Role(require = {RoleEnum.USER})
     public BaseResponse deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest request) {
         return commentService.deleteComment(commentId, request.getHeader(TOKEN));
     }

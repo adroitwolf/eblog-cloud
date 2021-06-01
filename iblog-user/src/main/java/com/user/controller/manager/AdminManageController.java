@@ -1,6 +1,6 @@
 package com.user.controller.manager;
 
-import com.auth.annotation.Role;
+import com.auth.aop.annotation.Role;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
 import com.common.entity.vo.QueryParams;
@@ -20,7 +20,6 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/manage/role")
-@Role(require = {RoleEnum.LORD})
 public class AdminManageController {
     @Autowired
     RoleService roleService;
@@ -34,11 +33,13 @@ public class AdminManageController {
      * @param queryParams
      * @return
      */
+    @Role(require = {RoleEnum.LORD})
     @GetMapping("/getListUsers")
     public BaseResponse listUsers(@Valid PageInfo pageInfo, QueryParams queryParams){
         return userService.getAllUserInfo(queryParams,pageInfo);
     }
 
+    @Role(require = {RoleEnum.LORD})
     @GetMapping("/getRoles")
     public BaseResponse listRoles(){
         return roleService.getRoles();
@@ -49,6 +50,7 @@ public class AdminManageController {
      * @param roleParams
      * @return
      */
+    @Role(require = {RoleEnum.LORD})
     @PutMapping("/updateRoles")
     public BaseResponse updateRoles(@RequestBody  RoleParams roleParams){
         return roleService.updateUserRoles(roleParams);

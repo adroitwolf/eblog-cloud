@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <p>ADROITWOLF</p> 2021-05-07
  */
-@Service
+@Service("authRedisService")
 @Slf4j
 public class RedisServiceImpl implements RedisService {
 

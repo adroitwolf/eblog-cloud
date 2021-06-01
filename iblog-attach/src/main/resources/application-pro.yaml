@@ -6,6 +6,11 @@ spring:
       max-file-size: 10MB
   main:
     allow-bean-definition-overriding: true
+  redis:
+    database: 0
+    host: 81.70.169.127
+    port: 6379
+    password: 123
   devtools:
     restart:
       enabled: true

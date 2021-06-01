@@ -1,5 +1,6 @@
 package com.blog.controller.portal;
 
+import com.blog.aop.annotation.IncrementClickCount;
 import com.blog.service.BlogService;
 import com.common.entity.vo.BaseResponse;
 import com.common.entity.vo.PageInfo;
@@ -25,6 +26,7 @@ public class BlogController {
     private static final String TOKEN = "Authentication";
 
     @GetMapping("/detail/{blogId:\\d+}")
+    @IncrementClickCount
     @ApiOperation("博客详细信息")
     public BaseResponse getDetail(@PathVariable("blogId") Long blogId) {
         return blogService.getArticleDetail(blogId);

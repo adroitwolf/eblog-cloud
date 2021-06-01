@@ -1,6 +1,8 @@
 package com.blog.service.impl;
 
-import com.blog.entity.model.PopularBlog;
+import com.blog.entity.model.ClickStatus;
+import com.blog.utils.RedisUtils;
+import com.common.entity.model.PopularBlog;
 import com.blog.service.RedisService;
 import com.common.entity.pojo.BlogStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +31,50 @@ public class RedisServiceImpl implements RedisService {
 
     private static final String BLOG_CLICKED_KEY = "BLOG_CLICKED";
 
+    /**
+     * 用户点击--redis锁
+      */
+    private final String LOCAL_BLOG_CLICK_PRE = "LOCAL_BLOG_CLICK_KEY";
+
+    /**
+     * redis通用锁value
+     */
+    private final String LOCAL_VALUE = "LOCAL_VALUE";
+
     @Autowired
     RedisTemplate redisTemplate;
     @Override
     public Set<PopularBlog> listTop5FrmRedis() {
         return redisTemplate.opsForZSet().reverseRange(LIST_TOP5_POSTS, 0, 5);
+    }
+
+    @Override
+    public void incrementBlogClickedCount(ClickStatus clickStatus) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(LOCAL_BLOG_CLICK_PRE);
+        builder.append(clickStatus.getBlogId());
+        Boolean lock = getLock(builder.toString(), LOCAL_VALUE, 2, TimeUnit.SECONDS);
+
+        if (!lock) {
+            //此时锁有人占用
+            log.info("redis正在添加缓存...请稍等");
+            return;
+        }
+
+        try {
+            String key = RedisUtils.getClickSetKey(clickStatus);
+            if (redisTemplate.opsForSet().isMember(key, clickStatus.getBlogId())) {
+                return;
+            }
+            redisTemplate.opsForHash().increment(BLOG_CLICKED_KEY, clickStatus.getBlogId(), clickStatus.getCount());
+
+            redisTemplate.opsForSet().add(key, clickStatus.getBlogId());
+            //过期时间为1天
+            redisTemplate.expire(key, 1, TimeUnit.DAYS);
+
+        } finally {
+            delete(builder.toString());
+        }
     }
 
     /**
