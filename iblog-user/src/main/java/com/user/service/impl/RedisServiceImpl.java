@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <p>ADROITWOLF</p> 2021-05-08
  */
-@Service
+@Service("userRedisService")
 @Slf4j
 public class RedisServiceImpl implements RedisService {
     //  邮箱验证码--redis锁
