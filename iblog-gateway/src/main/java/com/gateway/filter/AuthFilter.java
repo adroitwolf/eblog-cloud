@@ -6,6 +6,7 @@ import com.common.entity.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -22,6 +23,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ import java.util.List;
 @Slf4j
 public class AuthFilter implements GlobalFilter, Ordered {
 
-    @Autowired
+    @Resource(name = "authTokenService")
     TokenService tokenService;
 
     private List<String> whiteList =  new ArrayList<>();

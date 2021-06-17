@@ -43,6 +43,8 @@ public class RedisServiceImpl implements RedisService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+
     @Override
     public Set<PopularBlog> listTop5FrmRedis() {
         return redisTemplate.opsForZSet().reverseRange(LIST_TOP5_POSTS, 0, 5);
