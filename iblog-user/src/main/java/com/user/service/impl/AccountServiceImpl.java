@@ -13,7 +13,10 @@ import com.common.entity.vo.DataGrid;
 import com.common.entity.vo.QueryParams;
 import com.common.enums.RoleEnum;
 import com.common.enums.UserStatusEnum;
-import com.common.exception.*;
+import com.common.exception.BadRequestException;
+import com.common.exception.NotFoundException;
+import com.common.exception.UnAccessException;
+import com.common.exception.UnAuthenticationException;
 import com.common.utils.CommonUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -30,14 +33,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -66,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
     TokenService tokenService;
 
 
-    @Qualifier(value = "userRedisService")
+    @Resource(name = "userRedisService")
     RedisService redisService;
 
 
